@@ -1,6 +1,7 @@
 import passport from "passport";
 import SteamStrategy from "passport-steam";
 import { OIDCStrategy } from "passport-azure-ad";
+import { getMinecraftInfoFromAccessToken } from "./utils";
 
 passport.use(
 	new SteamStrategy(
@@ -21,7 +22,6 @@ passport.use(
 			clientID: `${process.env.AZURE_CLIENT_ID}`,
 			responseType: "code",
 			responseMode: "query",
-			loggingLevel: "info",
 			validateIssuer: false,
 			tenantIdOrName: "consumers",
 			allowHttpForRedirectUrl: true,
@@ -32,10 +32,8 @@ passport.use(
 				"https://login.microsoftonline.com/consumers/v2.0/.well-known/openid-configuration",
 		},
 		async (iss, sub, profile, accessToken, refreshToken, done) => {
-			const fwd = {
-				accessToken: accessToken,
-			};
-			done(null, fwd);
+			const mcInfo = await getMinecraftInfoFromAccessToken(accessToken);
+			done(null, mcInfo);
 		}
 	)
 );

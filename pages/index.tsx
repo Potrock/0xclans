@@ -1,14 +1,18 @@
-import { unstable_getServerSession } from "next-auth";
-import { signIn, useSession } from "next-auth/react";
+import { getSession, signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { authOptions } from "./api/auth/[...nextauth]";
-import { withIronSessionSsr } from "iron-session/next";
-import { sessionOptions } from "@/lib/sessionOptions";
 
-export default function Home() {
+import prisma from "@/lib/prisma";
+import { GetServerSideProps, GetServerSidePropsContext } from "next";
+import { useConnect } from "wagmi";
+
+export default function Home(props: any) {
 	const { data: session } = useSession();
 
 	const router = useRouter();
+
+	const { connect, account, connectors } = useConnect();
+
+	console.log(connectors);
 
 	const steam = async () => {
 		router.push("/api/auth/steam/login");
@@ -25,44 +29,66 @@ export default function Home() {
 				{session && <p>Welcome back, {session.user?.name}</p>}
 				{!session && <button onClick={() => signIn()}>Sign in</button>}
 			</div>
-			<div>
-				<button onClick={() => steam()} className="bg-blue-500">
-					Sign in with Steam
-				</button>
-			</div>
-			<div>
-				<button onClick={() => azure()} className="bg-blue-500">
-					Sign in with Azure
-				</button>
-			</div>
+			{props.user && !props.user.steam && (
+				<div>
+					<button onClick={() => steam()} className="bg-blue-500">
+						Sign in with Steam
+					</button>
+				</div>
+			)}
+			{props.user && props.user.steam && (
+				<p>Connected to Steam ID: {props.user.steam}</p>
+			)}
+			{props.user && !props.user.minecraft && (
+				<div>
+					<button onClick={() => azure()} className="bg-blue-500">
+						Sign in with Azure
+					</button>
+				</div>
+			)}
+			{props.user && props.user.minecraft && (
+				<p>Connected to Minecraft ID: {props.user.minecraft}</p>
+			)}
+			<button onClick={() => connect()}>Connect Wallet</button>
 		</div>
 	);
 }
 
-export const getServerSideProps = withIronSessionSsr(async function ({
+export const getServerSideProps: GetServerSideProps = async ({
 	req,
 	res,
-}) {
-	console.log(req.session);
-	const steamId = req.session.steamId;
-	const msftAccessToken = req.session.mstfAccessToken;
+}: GetServerSidePropsContext) => {
+	const session = await getSession({ req });
+	if (session) {
+		const user = await prisma.user.findUnique({
+			where: {
+				id: session.user.id,
+			},
+			include: {
+				Steam: {
+					select: {
+						steamId: true,
+					},
+				},
+				Minecraft: {
+					select: {
+						minecraftId: true,
+					},
+				},
+			},
+		});
 
-	const discordSession = await unstable_getServerSession(
-		req,
-		res,
-		authOptions
-	);
-
-	console.log(discordSession, "discordSession");
-	console.log(steamId, "steamId");
-	console.log(msftAccessToken, "msftAccessToken");
-	if (!steamId) {
 		return {
-			props: { session: discordSession },
+			props: {
+				session: session,
+				user: {
+					steam: user?.Steam?.steamId,
+					minecraft: user?.Minecraft?.minecraftId,
+				},
+			},
 		};
 	}
 	return {
-		props: { steamId: req.session.steamId },
+		props: { session: null },
 	};
-},
-sessionOptions);
+};

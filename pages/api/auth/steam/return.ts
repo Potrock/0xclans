@@ -1,4 +1,8 @@
+import { connectSteamToUser, getUserByID } from "@/lib/db/utils";
 import getHandler from "@/lib/router";
+import { getSteamIDFromURL } from "@/lib/utils";
+import { getSession } from "next-auth/react";
+import prisma from "@/lib/prisma";
 
 const path = "api/auth/steam/return";
 
@@ -14,12 +18,20 @@ export default getHandler().get(
 		if (!idLink) {
 			res.redirect("/");
 		}
-		let id = idLink.split("https://steamcommunity.com/openid/id/")[1];
-		if (!id) {
+		const steamID = getSteamIDFromURL(idLink);
+
+		const session = await getSession({ req });
+		if (!session?.user.id) {
 			res.redirect("/");
 		}
-		req.session.steamId = id;
-		await req.session.save();
+
+		const dbUser = await getUserByID(session?.user.id || "");
+		if (!dbUser) {
+			res.redirect("/");
+		}
+
+		let steam = connectSteamToUser(steamID, dbUser?.id || "");
+
 		res.redirect("/?success=1");
 	}
 );

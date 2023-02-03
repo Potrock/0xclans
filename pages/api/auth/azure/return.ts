@@ -1,7 +1,7 @@
-import { sessionOptions } from "@/lib/sessionOptions";
-import { ironSession } from "iron-session/express";
 import passport from "../../../../lib/passport";
 import getHandler from "../../../../lib/router";
+import { getSession } from "next-auth/react";
+import { connectMinecraftToUser, getUserByID } from "@/lib/db/utils";
 
 const path = "/api/auth/azure/return";
 
@@ -17,16 +17,17 @@ export default getHandler()
 			failureRedirect: "/",
 		})
 	)
-	.use(ironSession(sessionOptions))
 	.get(path, async (req: any, res: AuthReturnResponse) => {
-		const user = req.user;
-		if (!user.accessToken) {
+		const session = await getSession({ req });
+		if (!session?.user.id) {
 			res.redirect("/");
 		}
+		const mcInfo = req.user as { uuid: string; name: string };
+		const dbUser = await getUserByID(session?.user.id || "");
+		if (!dbUser) {
+			res.redirect("/");
+		}
+		let minecraft = connectMinecraftToUser(mcInfo, dbUser?.id || "");
 
-		console.log(user.accessToken);
-
-		req.session.msftAccessToken = user.accessToken;
-		await req.session.save();
 		res.redirect("/");
 	});

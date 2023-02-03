@@ -1,5 +1,7 @@
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import NextAuth from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
+import prisma from "../../../lib/prisma";
 
 export const authOptions = {
 	providers: [
@@ -8,12 +10,14 @@ export const authOptions = {
 			clientSecret: process.env.DISCORD_CLIENT_SECRET,
 		}),
 	],
+	adapter: PrismaAdapter(prisma),
+	secret: process.env.NEXTAUTH_SECRET,
 	callbacks: {
-		async jwt({ token, user, account, profile, isNewUser }) {
-			if (user) {
-				token.id = user.id;
+		async session({ session, user }) {
+			if (user && user.id) {
+				session.user.id = user.id;
 			}
-			return token;
+			return session;
 		},
 	},
 };
