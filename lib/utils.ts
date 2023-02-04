@@ -1,3 +1,5 @@
+import Web3 from "web3";
+
 export async function getMinecraftInfoFromAccessToken(accessToken: string) {
 	let rpsTicket = "d=" + accessToken;
 	let xblObj = {
@@ -69,4 +71,37 @@ export async function getMinecraftInfoFromAccessToken(accessToken: string) {
 
 export function getSteamIDFromURL(url: string) {
 	return url.split("https://steamcommunity.com/openid/id/")[1];
+}
+
+export function decodeSignature(signature: string, text: string) {
+	let web3 = new Web3(
+		new Web3.providers.HttpProvider(process.env.ALCHEMY_RPC_URL || "")
+	);
+
+	let address = web3.eth.accounts.recover(
+		"Sign the following message so we can authenticate your wallet: \n" +
+			text,
+		signature
+	);
+
+	return address;
+}
+
+export function authorizeLink(address: string, uuid: string, platform: string) {
+	let web3 = new Web3(
+		new Web3.providers.HttpProvider(process.env.ALCHEMY_RPC_URL || "")
+	);
+
+	let message = web3.utils.keccak256(
+		web3.eth.abi.encodeParameters(
+			["address", "string", "string"],
+			[address, uuid, platform]
+		)
+	);
+	let signature = web3.eth.accounts.sign(
+		message,
+		process.env.SIGNER_PK || ""
+	);
+
+	return signature.signature;
 }

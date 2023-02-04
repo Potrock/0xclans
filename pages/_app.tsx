@@ -2,66 +2,57 @@ import "@/styles/globals.css";
 import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "react-query";
+import {
+	EthereumClient,
+	modalConnectors,
+	walletConnectProvider,
+} from "@web3modal/ethereum";
+
+import { Web3Modal } from "@web3modal/react";
+
 import { configureChains, createClient, WagmiConfig } from "wagmi";
+
 import { polygonMumbai } from "wagmi/chains";
-import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
-import { InjectedConnector } from "wagmi/connectors/injected";
-import { MetaMaskConnector } from "wagmi/connectors/metaMask";
-import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
-import { alchemyProvider } from "wagmi/providers/alchemy";
-import { publicProvider } from "wagmi/providers/public";
 
-const queryClient = new QueryClient();
+const chains = [polygonMumbai];
 
-const { chains, provider, webSocketProvider } = configureChains(
-	[polygonMumbai],
-	[
-		alchemyProvider({
-			apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY || "",
-		}),
-		publicProvider(),
-	]
-);
+const { provider } = configureChains(chains, [
+	walletConnectProvider({ projectId: "27c67e4e9ac30f645f15cc77750db1b4" }),
+]);
 
 const wagmiClient = createClient({
 	autoConnect: true,
-	connectors: [
-		new MetaMaskConnector({ chains }),
-		// new CoinbaseWalletConnector({
-		// 	chains,
-		// 	options: {
-		// 		appName: "0xClans",
-		// 	},
-		// }),
-		// new WalletConnectConnector({
-		// 	chains,
-		// 	options: {
-		// 		qrcode: true,
-		// 	},
-		// }),
-		// new InjectedConnector({
-		// 	chains,
-		// 	options: {
-		// 		name: "Injected",
-		// 		shimDisconnect: true,
-		// 	},
-		// }),
-	],
+	connectors: modalConnectors({
+		projectId: "27c67e4e9ac30f645f15cc77750db1b4",
+		version: "2",
+		appName: "0xClans",
+		chains,
+	}),
 	provider,
-	webSocketProvider,
 });
+
+const ethereumClient = new EthereumClient(wagmiClient, chains);
+
+const queryClient = new QueryClient();
 
 export default function App({
 	Component,
 	pageProps: { session, ...pageProps },
 }: AppProps) {
 	return (
-		<QueryClientProvider client={queryClient}>
-			<WagmiConfig client={wagmiClient}>
-				<SessionProvider session={session}>
-					<Component {...pageProps} />
-				</SessionProvider>
-			</WagmiConfig>
-		</QueryClientProvider>
+		<>
+			<QueryClientProvider client={queryClient}>
+				<WagmiConfig client={wagmiClient}>
+					<SessionProvider session={session}>
+						<Component {...pageProps} />
+					</SessionProvider>
+				</WagmiConfig>
+			</QueryClientProvider>
+
+			<Web3Modal
+				projectId="27c67e4e9ac30f645f15cc77750db1b4"
+				ethereumClient={ethereumClient}
+			/>
+		</>
 	);
 }
