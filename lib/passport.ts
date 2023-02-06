@@ -25,7 +25,7 @@ passport.use(
 			validateIssuer: false,
 			tenantIdOrName: "consumers",
 			allowHttpForRedirectUrl: true,
-			redirectUrl: "http://localhost:3000/api/auth/azure/return",
+			redirectUrl: "http://localhost:3000/api/auth/minecraft/return",
 			clientSecret: `${process.env.AZURE_CLIENT_SECRET}`,
 			scope: "openid offline_access profile email XboxLive.signin",
 			identityMetadata:

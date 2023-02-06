@@ -51,6 +51,15 @@ export async function connectMinecraftToUser(
 	return minecraft;
 }
 
+export async function disconnectMinecraftFromUser(userID: string) {
+	const minecraft = await prisma.minecraft.delete({
+		where: {
+			userId: userID,
+		},
+	});
+	return minecraft;
+}
+
 export async function connectSteamToUser(steamID: string, userId: string) {
 	const steam = await prisma.steam.create({
 		data: {
@@ -63,4 +72,36 @@ export async function connectSteamToUser(steamID: string, userId: string) {
 		},
 	});
 	return steam;
+}
+
+export async function disconnectSteamFromUser(userID: string) {
+	const steam = await prisma.steam.delete({
+		where: {
+			userId: userID,
+		},
+	});
+	return steam;
+}
+
+export async function connectWalletToUser(address: string, userId: string) {
+	const wallet = await prisma.wallet.create({
+		data: {
+			address: address,
+			user: {
+				connect: {
+					id: userId,
+				},
+			},
+		},
+	});
+	return wallet;
+}
+
+export async function disconnectWalletFromUser(userID: string) {
+	const wallet = await prisma.wallet.delete({
+		where: {
+			userId: userID,
+		},
+	});
+	return wallet;
 }

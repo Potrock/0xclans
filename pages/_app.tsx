@@ -13,6 +13,7 @@ import { Web3Modal } from "@web3modal/react";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
 
 import { polygonMumbai } from "wagmi/chains";
+import { Layout } from "@/components/layout";
 
 const chains = [polygonMumbai];
 
@@ -44,7 +45,9 @@ export default function App({
 			<QueryClientProvider client={queryClient}>
 				<WagmiConfig client={wagmiClient}>
 					<SessionProvider session={session}>
-						<Component {...pageProps} />
+						<Layout>
+							<Component {...pageProps} />
+						</Layout>
 					</SessionProvider>
 				</WagmiConfig>
 			</QueryClientProvider>

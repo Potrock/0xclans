@@ -1,7 +1,5 @@
 import passport from "../../../../lib/passport";
 import getHandler from "../../../../lib/router";
-import { ironSession } from "iron-session/express";
-import { sessionOptions } from "@/lib/sessionOptions";
 
 const path = "/api/auth/steam/login";
 
