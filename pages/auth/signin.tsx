@@ -2,32 +2,22 @@ import type {
 	GetServerSidePropsContext,
 	InferGetServerSidePropsType,
 } from "next";
-import { getProviders, signIn } from "next-auth/react";
-import getServerSession from "next-auth/next";
-import { authOptions } from "../api/auth/[...nextauth]";
+import { getProviders, getSession, signIn } from "next-auth/react";
 
-export default function SignIn({
-	providers,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function SignIn({}: InferGetServerSidePropsType<
+	typeof getServerSideProps
+>) {
 	return (
-		<>
-			{Object.values(providers).map((provider) => (
-				<div key={provider.name}>
-					<button onClick={() => signIn(provider.id)}>
-						Sign in with {provider.name}
-					</button>
-				</div>
-			))}
-		</>
+		<div className="flex justify-center">
+			<button onClick={() => signIn("discord")} className="m-auto">
+				Sign in with Discord
+			</button>
+		</div>
 	);
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-	const session = await getServerSession(
-		context.req as any,
-		context.res as any,
-		authOptions
-	);
+	const session = await getSession(context);
 
 	if (session) {
 		return { redirect: { destination: "/" } };
@@ -35,7 +25,5 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
 	const providers = (await getProviders()) as any;
 
-	return {
-		props: { providers: Object.values(providers) ?? [] },
-	};
+	return { props: {} };
 }
