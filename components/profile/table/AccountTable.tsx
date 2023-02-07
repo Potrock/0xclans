@@ -1,4 +1,5 @@
 import { Table } from "flowbite-react";
+import { TableRecord } from "./TableRecord";
 
 type AccountTableProps = {
 	accounts?: {
@@ -16,28 +17,14 @@ export const AccountTable = ({ accounts }: AccountTableProps) => {
 				<Table.HeadCell>On Chain</Table.HeadCell>
 			</Table.Head>
 			<Table.Body className="divide-y">
-				<Table.Row className="py-4 bg-gray-800">
-					<Table.Cell className="items-center pl-4 font-medium text-white whitespace-nowrap">
-						Steam
-					</Table.Cell>
-					<Table.Cell>
-						{accounts && accounts.steam && <p>Connected</p>}
-						{(!accounts || !accounts.steam) && <p>Not Connected</p>}
-					</Table.Cell>
-					<Table.Cell>TODO: ON CHAIN STATUS</Table.Cell>
-				</Table.Row>
-				<Table.Row className="py-4 bg-gray-800">
-					<Table.Cell className="items-center pl-4 font-medium text-white whitespace-nowrap">
-						Minecraft
-					</Table.Cell>
-					<Table.Cell>
-						{accounts && accounts.minecraft && <p>Connected</p>}
-						{(!accounts || !accounts.minecraft) && (
-							<p>Not Connected</p>
-						)}
-					</Table.Cell>
-					<Table.Cell>TODO: ON CHAIN STATUS</Table.Cell>
-				</Table.Row>
+				<TableRecord
+					accountType="Minecraft"
+					accountValue={accounts?.minecraft}
+				/>
+				<TableRecord
+					accountType="Steam"
+					accountValue={accounts?.steam}
+				/>
 			</Table.Body>
 		</Table>
 	);

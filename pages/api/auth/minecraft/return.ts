@@ -3,7 +3,7 @@ import getHandler from "../../../../lib/router";
 import { getSession } from "next-auth/react";
 import { connectMinecraftToUser, getUserByID } from "@/lib/db/utils";
 
-const path = "/api/auth/azure/return";
+const path = "/api/auth/minecraft/return";
 
 interface AuthReturnResponse extends Response {
 	redirect: (path: string) => any;

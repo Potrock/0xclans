@@ -55,17 +55,17 @@ model User {
 }
 
 model Steam {
-  steamId   String
+  id        String
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   userId    String   @unique
 }
 
 model Minecraft {
-  minecraftId String
-  user        User     @relation(fields: [userId], references: [id])
-  createdAt   DateTime @default(now())
-  userId      String   @unique
+  id        String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  userId    String   @unique
 }
 
 model Wallet {

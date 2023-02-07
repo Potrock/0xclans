@@ -1,3 +1,4 @@
+import { Button } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useSignMessage } from "wagmi";
@@ -5,7 +6,7 @@ import { useSignMessage } from "wagmi";
 export const LinkWallet = () => {
 	const { data: session } = useSession();
 
-	const [isLoading, setIsLoading] = useState<Boolean>(false);
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	const { isSuccess, signMessageAsync } = useSignMessage({
 		message:
@@ -16,7 +17,9 @@ export const LinkWallet = () => {
 	const link = async () => {
 		setIsLoading(true);
 		const signedMsg = await signMessageAsync();
-		const res = await fetch("/api/wallet/link?signedMsg=" + signedMsg);
+		const res = await fetch(
+			"/api/auth/wallet/link?signedMsg=" + signedMsg.toString()
+		);
 		if (res.status === 200) {
 			// Linking successful
 			console.log("Wallet linked");
@@ -26,9 +29,13 @@ export const LinkWallet = () => {
 
 	return (
 		<>
-			<button onClick={() => link()} className="btn btn-primary">
+			<Button
+				disabled={isLoading}
+				onClick={() => link()}
+				className="px-2"
+			>
 				Link Wallet
-			</button>
+			</Button>
 		</>
 	);
 };

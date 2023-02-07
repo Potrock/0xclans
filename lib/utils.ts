@@ -79,7 +79,7 @@ export function decodeSignature(signature: string, text: string) {
 	);
 
 	let address = web3.eth.accounts.recover(
-		"Sign the following message so we can authenticate your wallet: \n" +
+		"Sign this message to link your wallet to your 0xClans account: \n" +
 			text,
 		signature
 	);

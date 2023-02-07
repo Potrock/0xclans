@@ -1,4 +1,5 @@
 import prisma from "../prisma";
+import { authorizeLink } from "../utils";
 
 export async function getUserByID(id: string) {
 	const user = await prisma.user.findUnique({
@@ -17,20 +18,20 @@ export async function getUserLinkedAccounts(userId: string) {
 		include: {
 			Steam: {
 				select: {
-					steamId: true,
+					id: true,
 				},
 			},
 			Minecraft: {
 				select: {
-					minecraftId: true,
+					id: true,
 				},
 			},
 		},
 	});
 
 	return {
-		steam: user?.Steam?.steamId,
-		minecraft: user?.Minecraft?.minecraftId,
+		steam: user?.Steam?.id || null,
+		minecraft: user?.Minecraft?.id || null,
 	};
 }
 
@@ -40,7 +41,7 @@ export async function connectMinecraftToUser(
 ) {
 	const minecraft = await prisma.minecraft.create({
 		data: {
-			minecraftId: mcInfo.uuid,
+			id: mcInfo.uuid,
 			user: {
 				connect: {
 					id: userID,
@@ -63,7 +64,7 @@ export async function disconnectMinecraftFromUser(userID: string) {
 export async function connectSteamToUser(steamID: string, userId: string) {
 	const steam = await prisma.steam.create({
 		data: {
-			steamId: steamID,
+			id: steamID,
 			user: {
 				connect: {
 					id: userId,
@@ -104,4 +105,56 @@ export async function disconnectWalletFromUser(userID: string) {
 		},
 	});
 	return wallet;
+}
+
+export async function getLinkApprovalSig(userID: string, platformName: string) {
+	let platformUUID = null;
+
+	if (platformName === "Minecraft") {
+		platformUUID =
+			(await prisma.minecraft.findUnique({
+				where: {
+					userId: userID,
+				},
+				select: {
+					id: true,
+				},
+			})) ?? {};
+	} else if (platformName === "Steam") {
+		platformUUID =
+			(await prisma.steam.findUnique({
+				where: {
+					userId: userID,
+				},
+				select: {
+					id: true,
+				},
+			})) ?? {};
+	} else {
+		return null;
+	}
+
+	const wallet =
+		(await prisma.wallet.findUnique({
+			where: {
+				userId: userID,
+			},
+			select: {
+				address: true,
+			},
+		})) ?? null;
+	if (wallet && wallet.address && platformUUID.id) {
+		console.log(wallet.address);
+		const sig = authorizeLink(
+			wallet.address.toLowerCase(),
+			platformUUID.id.toLowerCase(),
+			platformName.toLowerCase()
+		);
+
+		if (sig) {
+			return sig;
+		}
+	} else {
+		return null;
+	}
 }

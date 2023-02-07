@@ -32,7 +32,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 	const session = await getSession(context);
 
 	if (session) {
-		return { redirect: { destination: "/" } };
+		return { redirect: { destination: "/profile" } };
 	}
 
 	const providers = (await getProviders()) as any;

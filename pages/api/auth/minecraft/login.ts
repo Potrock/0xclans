@@ -1,7 +1,7 @@
 import passport from "../../../../lib/passport";
 import getHandler from "../../../../lib/router";
 
-const path = "api/auth/azure/login";
+const path = "api/auth/minecraft/login";
 
 export default getHandler()
 	.use(

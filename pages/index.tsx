@@ -1,9 +1,7 @@
 import { getSession, signIn, useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
-import { Web3Button } from "@web3modal/react";
 import { getUserLinkedAccounts } from "@/lib/db/utils";
-import { AccountLink } from "@/components/linking/AccountLink";
 import { Session } from "next-auth";
 
 type Props = {
@@ -41,43 +39,6 @@ export default function Home(props: Props) {
 				)}
 				{!session && <button onClick={() => signIn()}>Sign in</button>}
 			</div>
-			{props.accounts && !props.accounts?.steam && (
-				<div>
-					<button onClick={() => steam()} className="bg-blue-500">
-						Sign in with Steam
-					</button>
-				</div>
-			)}
-			{props.accounts && props.accounts.steam && (
-				<p>Connected to Steam ID: {props.accounts.steam}</p>
-			)}
-			{props.accounts && !props.accounts.minecraft && (
-				<div>
-					<button onClick={() => azure()} className="bg-blue-500">
-						Sign in with Azure
-					</button>
-				</div>
-			)}
-			{props.accounts && props.accounts.minecraft && (
-				<p>Connected to Minecraft ID: {props.accounts.minecraft}</p>
-			)}
-			<Web3Button />
-			{props.accounts && (
-				<div>
-					{props.accounts.steam && (
-						<AccountLink
-							platform="steam"
-							uuid={props.accounts.steam}
-						/>
-					)}
-					{props.accounts.minecraft && (
-						<AccountLink
-							platform="minecraft"
-							uuid={props.accounts.minecraft}
-						/>
-					)}
-				</div>
-			)}
 		</div>
 	);
 }
