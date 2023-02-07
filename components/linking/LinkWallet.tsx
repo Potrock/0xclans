@@ -33,6 +33,7 @@ export const LinkWallet = () => {
 				disabled={isLoading}
 				onClick={() => link()}
 				className="px-2"
+				color="success"
 			>
 				Link Wallet
 			</Button>

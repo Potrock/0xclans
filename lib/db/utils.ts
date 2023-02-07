@@ -98,6 +98,19 @@ export async function connectWalletToUser(address: string, userId: string) {
 	return wallet;
 }
 
+export async function getUserLinkedWallet(userID: string) {
+	const wallet =
+		(await prisma.wallet.findUnique({
+			where: {
+				userId: userID,
+			},
+			select: {
+				address: true,
+			},
+		})) ?? null;
+	return wallet;
+}
+
 export async function disconnectWalletFromUser(userID: string) {
 	const wallet = await prisma.wallet.delete({
 		where: {

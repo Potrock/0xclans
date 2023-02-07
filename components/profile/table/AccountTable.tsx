@@ -10,13 +10,13 @@ type AccountTableProps = {
 
 export const AccountTable = ({ accounts }: AccountTableProps) => {
 	return (
-		<Table className="table-auto">
-			<Table.Head className="text-white bg-gray-700">
+		<Table className="mt-4 border-transparent table-auto">
+			<Table.Head className="text-xl text-white bg-gray-700">
 				<Table.HeadCell>Platform Name</Table.HeadCell>
 				<Table.HeadCell>Connect</Table.HeadCell>
 				<Table.HeadCell>On Chain</Table.HeadCell>
 			</Table.Head>
-			<Table.Body className="divide-y">
+			<Table.Body className="border-transparent divide-y">
 				<TableRecord
 					accountType="Minecraft"
 					accountValue={accounts?.minecraft}

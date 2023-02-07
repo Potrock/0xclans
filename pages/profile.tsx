@@ -1,8 +1,6 @@
-import { AccountLink } from "@/components/linking/AccountLink";
 import { LinkWallet } from "@/components/linking/LinkWallet";
 import { AccountTable } from "@/components/profile/table/AccountTable";
-import { getUserLinkedAccounts } from "@/lib/db/utils";
-import { Table } from "flowbite-react";
+import { getUserLinkedAccounts, getUserLinkedWallet } from "@/lib/db/utils";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { Session } from "next-auth";
 import { getSession } from "next-auth/react";
@@ -13,6 +11,9 @@ type ProfileProps = {
 		steam?: string;
 	};
 	session: Session;
+	wallet?: {
+		address: string;
+	};
 };
 
 export default function Profile(props: ProfileProps) {
@@ -20,7 +21,8 @@ export default function Profile(props: ProfileProps) {
 		<div className="flex flex-col">
 			<p className="pt-16 text-3xl font-bold">Profile</p>
 			<div className="pt-8">
-				<LinkWallet />
+				{props.wallet && props.wallet.address}
+				{!props.wallet && <LinkWallet />}
 			</div>
 			<div className="pt-8">
 				<div className="">
@@ -40,11 +42,14 @@ export const getServerSideProps: GetServerSideProps = async ({
 	if (session) {
 		const userAccounts = await getUserLinkedAccounts(session.user.id);
 
+		const wallet = await getUserLinkedWallet(session.user.id);
+
 		if (userAccounts && (userAccounts.steam || userAccounts.minecraft)) {
 			return {
 				props: {
 					session: session,
 					accounts: userAccounts,
+					wallet: wallet,
 				},
 			};
 		} else {
@@ -53,5 +58,5 @@ export const getServerSideProps: GetServerSideProps = async ({
 			};
 		}
 	}
-	return { redirect: { destination: "/auth/signin" } };
+	return { redirect: { destination: "/auth/signin", permanent: false } };
 };

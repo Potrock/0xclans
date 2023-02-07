@@ -13,17 +13,17 @@ export const TableRecord = ({
 }: TableRecordProps) => {
 	return (
 		<>
-			<Table.Row className="py-4 bg-gray-800">
-				<Table.Cell className="items-center pl-4 font-medium text-white whitespace-nowrap">
+			<Table.Row className="py-4 bg-gray-800 border-transparent">
+				<Table.Cell className="pl-4 text-lg font-medium text-center text-white whitespace-nowrap">
 					{accountType}
 				</Table.Cell>
-				<Table.Cell>
+				<Table.Cell className="text-center">
 					{accountValue && <p>Connected</p>}
 					{!accountValue && (
 						<DatabaseLinker platformName={accountType} />
 					)}
 				</Table.Cell>
-				<Table.Cell>
+				<Table.Cell className="flex justify-center">
 					<OnchainLinker
 						platformName={accountType}
 						uuid={accountValue || ""}

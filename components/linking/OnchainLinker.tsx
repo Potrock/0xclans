@@ -1,6 +1,10 @@
 import { Button } from "flowbite-react";
 import { useState } from "react";
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import {
+	useContractRead,
+	useContractWrite,
+	usePrepareContractWrite,
+} from "wagmi";
 import AccountLinker from "contracts/AccountLinker.json";
 
 type OnchainLinkerProps = {
@@ -15,6 +19,13 @@ export const OnchainLinker = ({
 	isActive,
 }: OnchainLinkerProps) => {
 	const [authSignature, setAuthSignature] = useState<string>("");
+
+	const { data: currLinkedAddress } = useContractRead({
+		address: AccountLinker.address as `0x${string}`,
+		abi: AccountLinker.abi,
+		functionName: "getAddressByUuidByPlatform",
+		args: [uuid, platformName.toLowerCase()],
+	});
 
 	const { config } = usePrepareContractWrite({
 		address: AccountLinker.address as `0x${string}`,
@@ -42,8 +53,24 @@ export const OnchainLinker = ({
 
 	return (
 		<div>
-			<Button className="px-2" onClick={linkAccount}>
-				On Chain Link
+			<Button
+				className="px-2"
+				onClick={linkAccount}
+				disabled={
+					currLinkedAddress !=
+					"0x0000000000000000000000000000000000000000"
+				}
+			>
+				<>
+					{currLinkedAddress ==
+						"0x0000000000000000000000000000000000000000" && (
+						<p>Connect on-chain! 🚀</p>
+					)}
+					{currLinkedAddress !=
+						"0x0000000000000000000000000000000000000000" && (
+						<p>Connected! ✅ </p>
+					)}
+				</>
 			</Button>
 		</div>
 	);
