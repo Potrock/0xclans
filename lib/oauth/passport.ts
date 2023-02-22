@@ -1,4 +1,5 @@
 import passport from "passport";
+// @ts-ignore
 import SteamStrategy from "passport-steam";
 import { OIDCStrategy } from "passport-azure-ad";
 import { getMinecraftInfoFromAccessToken } from "../utils";
@@ -10,7 +11,7 @@ passport.use(
 			realm: "http://localhost:3000/",
 			apiKey: `${process.env.STEAM_API_KEY}`,
 		},
-		(_, profile, done) => {
+		(_: any, profile: any, done: any) => {
 			return done(null, profile);
 		}
 	)
@@ -23,6 +24,7 @@ passport.use(
 			responseType: "code",
 			responseMode: "query",
 			validateIssuer: false,
+			// @ts-ignore
 			tenantIdOrName: "consumers",
 			allowHttpForRedirectUrl: true,
 			redirectUrl: "http://localhost:3000/api/auth/minecraft/return",
@@ -31,7 +33,14 @@ passport.use(
 			identityMetadata:
 				"https://login.microsoftonline.com/consumers/v2.0/.well-known/openid-configuration",
 		},
-		async (iss, sub, profile, accessToken, refreshToken, done) => {
+		async (
+			iss: any,
+			sub: any,
+			profile: any,
+			accessToken: any,
+			refreshToken: any,
+			done: any
+		) => {
 			const mcInfo = await getMinecraftInfoFromAccessToken(accessToken);
 			done(null, mcInfo);
 		}

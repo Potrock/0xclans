@@ -37,7 +37,7 @@ export default function Profile(props: ProfileProps) {
 				}
 			}
 		}
-	}, [isConnected, address]);
+	}, [isConnected, address, props.wallet]);
 
 	useEffect(() => {
 		setConnected(true);

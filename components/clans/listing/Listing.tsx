@@ -42,7 +42,7 @@ export const Listing = ({ clans }: ListingProps) => {
 							</thead>
 							<tbody>
 								{clans.map((clan) => (
-									<ClanListingItem {...clan} />
+									<ClanListingItem {...clan} key={clan.id} />
 								))}
 							</tbody>
 						</table>
