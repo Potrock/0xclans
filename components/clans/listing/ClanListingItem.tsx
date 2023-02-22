@@ -7,7 +7,7 @@ import { truncateAddress } from "@/utils/helpers";
 
 export const ClanListingItem = (clanInfo: GetClanResultType) => {
 	return (
-		<tr className="bg-gray-700 border-b">
+		<tr className="bg-gray-700">
 			<td className="px-6 py-4 text-sm font-medium text-gray-200 whitespace-nowrap">
 				{clanInfo.name}
 			</td>
@@ -19,7 +19,7 @@ export const ClanListingItem = (clanInfo: GetClanResultType) => {
 			</td>
 			<td className="px-6 py-4 text-sm font-medium text-gray-200 whitespace-nowrap">
 				<Link
-					href={`https://etherscan.io/address/${clanInfo.id}`}
+					href={`https://mumbai.polygonscan.com/address/${clanInfo.id}`}
 					target="_blank"
 					rel="noreferrer"
 				>

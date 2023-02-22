@@ -22,7 +22,7 @@ export const Listing = ({ clans }: ListingProps) => {
 				<div className="inline-block min-w-full py-2">
 					<div className="overflow-hidden">
 						<table className="min-w-full rounded">
-							<thead className="bg-gray-800 border-b">
+							<thead className="bg-gray-800">
 								<tr>
 									<th
 										scope="col"
