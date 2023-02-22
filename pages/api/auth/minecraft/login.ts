@@ -1,5 +1,5 @@
-import passport from "../../../../lib/passport";
-import getHandler from "../../../../lib/router";
+import passport from "../../../../lib/oauth/passport";
+import getHandler from "../../../../lib/oauth/router";
 
 const path = "api/auth/minecraft/login";
 

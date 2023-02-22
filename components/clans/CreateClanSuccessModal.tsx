@@ -1,6 +1,5 @@
 import { truncateAddress } from "@/utils/helpers";
 import { Dialog, Transition } from "@headlessui/react";
-import { Button, Modal } from "flowbite-react";
 import Link from "next/link";
 import React, { Fragment, useRef, useState } from "react";
 import { CheckIcon } from "@heroicons/react/24/outline";

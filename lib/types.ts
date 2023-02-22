@@ -24,3 +24,15 @@ export type GetClanResultType = z.infer<typeof GetClanResult>;
 export const GetClansResults = z.array(GetClanResult);
 
 export type GetClansResultsType = z.infer<typeof GetClansResults>;
+
+export const GetAnalyticsResult = z.object({
+	userFactory: z.object({
+		userCount: z.number(),
+		accountCount: z.number(),
+	}),
+	clanFactory: z.object({
+		clanCount: z.number(),
+	}),
+});
+
+export type GetAnalyticsResultType = z.infer<typeof GetAnalyticsResult>;

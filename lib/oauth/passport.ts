@@ -1,7 +1,7 @@
 import passport from "passport";
 import SteamStrategy from "passport-steam";
 import { OIDCStrategy } from "passport-azure-ad";
-import { getMinecraftInfoFromAccessToken } from "./utils";
+import { getMinecraftInfoFromAccessToken } from "../utils";
 
 passport.use(
 	new SteamStrategy(

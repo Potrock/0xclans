@@ -32,10 +32,12 @@ export default function Profile(props: ProfileProps) {
 			if (address && props.wallet) {
 				if (address !== props.wallet.address) {
 					setIsDifferentAddress(true);
+				} else {
+					setIsDifferentAddress(false);
 				}
 			}
 		}
-	}, [isConnected]);
+	}, [isConnected, address]);
 
 	useEffect(() => {
 		setConnected(true);

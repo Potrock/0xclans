@@ -1,5 +1,5 @@
 import { connectSteamToUser, getUserByID } from "@/lib/db/utils";
-import getHandler from "@/lib/router";
+import getHandler from "@/lib/oauth/router";
 import { getSteamIDFromURL } from "@/lib/utils";
 import { getSession } from "next-auth/react";
 import prisma from "@/lib/prisma";

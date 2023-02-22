@@ -1,5 +1,5 @@
-import passport from "../../../../lib/passport";
-import getHandler from "../../../../lib/router";
+import passport from "../../../../lib/oauth/passport";
+import getHandler from "../../../../lib/oauth/router";
 import { getSession } from "next-auth/react";
 import { connectMinecraftToUser, getUserByID } from "@/lib/db/utils";
 
