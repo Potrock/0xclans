@@ -2,8 +2,6 @@ import { getAnalytics } from "@/lib/graph";
 import { GetAnalyticsResultType } from "@/lib/types";
 import {
 	UserCircleIcon,
-	UserGroupIcon,
-	HashtagIcon,
 	CircleStackIcon,
 	LinkIcon,
 	ShieldCheckIcon,
