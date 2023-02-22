@@ -1,5 +1,4 @@
 import { getSession, signIn, useSession, signOut } from "next-auth/react";
-import { useRouter } from "next/router";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { getUserLinkedAccounts } from "@/lib/db/utils";
 import { Session } from "next-auth";
@@ -14,16 +13,6 @@ type Props = {
 
 export default function Home(props: Props) {
 	const { data: session } = useSession();
-
-	const router = useRouter();
-
-	const steam = async () => {
-		router.push("/api/auth/steam/login");
-	};
-
-	const azure = async () => {
-		router.push("/api/auth/minecraft/login");
-	};
 
 	return (
 		<div className="flex flex-col items-center justify-center">

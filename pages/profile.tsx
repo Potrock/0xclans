@@ -1,9 +1,11 @@
 import { LinkWallet } from "@/components/linking/LinkWallet";
 import { AccountTable } from "@/components/profile/table/AccountTable";
 import { getUserLinkedAccounts, getUserLinkedWallet } from "@/lib/db/utils";
+import { Button } from "flowbite-react";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { Session } from "next-auth";
 import { getSession } from "next-auth/react";
+import { useAccount, useConnect } from "wagmi";
 
 type ProfileProps = {
 	accounts?: {
@@ -15,12 +17,18 @@ type ProfileProps = {
 		address: string;
 	};
 };
-
 export default function Profile(props: ProfileProps) {
+	/**
+	 * TODO: handle linkWallet=true in query
+	 */
+
+	const { connect } = useConnect();
+
 	return (
 		<div className="flex flex-col">
 			<p className="pt-16 text-3xl font-bold">Profile</p>
 			<div className="pt-8">
+				<Button onClick={() => connect}>Connect Wallet</Button>
 				{props.wallet && props.wallet.address}
 				{!props.wallet && <LinkWallet />}
 			</div>

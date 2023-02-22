@@ -1,4 +1,4 @@
-import { Button } from "flowbite-react";
+import { Button } from "components/elements/Button";
 import { useRouter } from "next/router";
 
 type DatabaseLinkerProps = {
@@ -13,9 +13,7 @@ export const DatabaseLinker = ({ platformName }: DatabaseLinkerProps) => {
 
 	return (
 		<div>
-			<Button className="px-2" onClick={linkToOAuth}>
-				Sign in with {platformName}
-			</Button>
+			<Button onClick={linkToOAuth}>Sign in with {platformName}</Button>
 		</div>
 	);
 };

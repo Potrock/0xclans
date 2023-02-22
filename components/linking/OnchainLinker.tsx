@@ -1,4 +1,4 @@
-import { Button } from "flowbite-react";
+import { Button } from "components/elements/Button";
 import { useState } from "react";
 import {
 	useContractRead,
@@ -54,7 +54,6 @@ export const OnchainLinker = ({
 	return (
 		<div>
 			<Button
-				className="px-2"
 				onClick={linkAccount}
 				disabled={
 					currLinkedAddress !=

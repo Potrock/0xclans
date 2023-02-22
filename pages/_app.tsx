@@ -52,10 +52,10 @@ export default function App({
 				</WagmiConfig>
 			</QueryClientProvider>
 
-			<Web3Modal
+			{/* <Web3Modal
 				projectId="27c67e4e9ac30f645f15cc77750db1b4"
 				ethereumClient={ethereumClient}
-			/>
+			/> */}
 		</>
 	);
 }
