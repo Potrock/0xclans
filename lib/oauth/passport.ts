@@ -7,8 +7,8 @@ import { getMinecraftInfoFromAccessToken } from "../utils";
 passport.use(
 	new SteamStrategy(
 		{
-			returnURL: "http://localhost:3000/api/auth/steam/return",
-			realm: "http://localhost:3000/",
+			returnURL: "https://0xclans.xyz/api/auth/steam/return",
+			realm: "https://0xclans.xyz",
 			apiKey: `${process.env.STEAM_API_KEY}`,
 		},
 		(_: any, profile: any, done: any) => {
@@ -27,7 +27,7 @@ passport.use(
 			// @ts-ignore
 			tenantIdOrName: "consumers",
 			allowHttpForRedirectUrl: true,
-			redirectUrl: "http://localhost:3000/api/auth/minecraft/return",
+			redirectUrl: "https://0xclans.xyz/api/auth/minecraft/return",
 			clientSecret: `${process.env.AZURE_CLIENT_SECRET}`,
 			scope: "openid offline_access profile email XboxLive.signin",
 			identityMetadata:
