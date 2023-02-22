@@ -1,7 +1,4 @@
-import { useAccount, useContractRead } from "wagmi";
-import ClanFactoryClones from "contracts/ClanFactoryClones.json";
 import { ClanListingItem } from "./ClanListingItem";
-import { useEffect, useState } from "react";
 import { GetClansResultsType } from "@/lib/types";
 
 type ListingProps = {
@@ -9,17 +6,10 @@ type ListingProps = {
 };
 
 export const Listing = ({ clans }: ListingProps) => {
-	const { isConnected } = useAccount();
-	const { data: clanCount, isLoading } = useContractRead({
-		address: ClanFactoryClones.address as `0x${string}`,
-		abi: ClanFactoryClones.abi,
-		functionName: "allClansLength",
-	});
-
 	return (
-		<div className="flex flex-col pt-6">
+		<div className="flex flex-col pt-2">
 			<div className="overflow-x-auto">
-				<div className="inline-block min-w-full py-2">
+				<div className="inline-block min-w-full">
 					<div className="overflow-hidden">
 						<table className="min-w-full rounded">
 							<thead className="bg-gray-800">

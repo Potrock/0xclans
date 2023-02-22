@@ -1,16 +1,10 @@
 import { Label, Spinner, TextInput } from "flowbite-react";
 import { Button } from "../elements/Button";
-import {
-	useAccount,
-	useContractWrite,
-	useWaitForTransaction,
-	usePrepareContractWrite,
-} from "wagmi";
+import { useContractWrite, usePrepareContractWrite } from "wagmi";
 
 import ClanFactoryClones from "contracts/ClanFactoryClones.json";
 import { useEffect, useState } from "react";
 import { CreateClanSuccessModal } from "./CreateClanSuccessModal";
-import { Listing } from "./listing/Listing";
 
 export const CreateClan = () => {
 	const [name, setName] = useState<string>("");

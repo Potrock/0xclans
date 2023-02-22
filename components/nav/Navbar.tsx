@@ -1,13 +1,23 @@
+import Image from "next/image";
 import Link from "next/link";
+import logo from "../../assets/0xclans-logo.png";
 
 export const Navbar = () => {
 	return (
 		<nav className=" border-gray-200 px-2 sm:px-4 py-2.5 rounded bg-gray-900">
 			<div className="container flex flex-wrap items-center justify-between mx-auto">
 				<a href="https://0xclans.xyz" className="flex items-center">
-					<span className="self-center text-2xl font-semibold text-yellow-300 whitespace-nowrap dark:text-white">
-						0xClans
-					</span>
+					<div className="flex">
+						<Image
+							src={logo}
+							width={75}
+							height={75}
+							alt="0xClans Logo"
+						/>
+						<span className="self-center pl-4 text-2xl font-semibold text-transparent bg-gradient-to-r from-rose-400 to-yellow-300 bg-clip-text whitespace-nowrap">
+							0xClans
+						</span>
+					</div>
 				</a>
 				<button
 					data-collapse-toggle="navbar-default"

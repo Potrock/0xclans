@@ -13,24 +13,24 @@ export const TableRecord = ({
 }: TableRecordProps) => {
 	return (
 		<>
-			<Table.Row className="py-4 bg-gray-800 border-transparent">
-				<Table.Cell className="pl-4 text-lg font-medium text-center text-white whitespace-nowrap">
+			<tr className="bg-gray-700">
+				<td className="px-6 py-4 text-sm font-medium text-gray-200 whitespace-nowrap">
 					{accountType}
-				</Table.Cell>
-				<Table.Cell className="text-center">
+				</td>
+				<td className="px-6 py-4 text-sm font-medium text-gray-200 whitespace-nowrap">
 					{accountValue && <p>Connected</p>}
 					{!accountValue && (
 						<DatabaseLinker platformName={accountType} />
 					)}
-				</Table.Cell>
-				<Table.Cell className="flex justify-center">
+				</td>
+				<td className="px-6 py-4 text-sm font-medium text-gray-200 whitespace-nowrap">
 					<OnchainLinker
 						platformName={accountType}
 						uuid={accountValue || ""}
 						isActive={accountValue ? true : false}
 					/>
-				</Table.Cell>
-			</Table.Row>
+				</td>
+			</tr>
 		</>
 	);
 };

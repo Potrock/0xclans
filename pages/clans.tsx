@@ -19,6 +19,7 @@ export default function Clans({ session, wallet, clans }: ClanProps) {
 	return (
 		<div className="w-9/12 mx-auto ">
 			<CreateClan />
+			<h1 className="pt-6 text-xl font-bold">Clan Browser</h1>
 			{clans && <Listing clans={clans} />}
 		</div>
 	);
