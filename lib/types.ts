@@ -36,3 +36,24 @@ export const GetAnalyticsResult = z.object({
 });
 
 export type GetAnalyticsResultType = z.infer<typeof GetAnalyticsResult>;
+
+export const UserProfileResult = z.object({
+	user: z.object({
+		accounts: z.array(
+			z.object({
+				platform: z.string(),
+				uuid: z.string(),
+			})
+		),
+		clans: z.array(
+			z.object({
+				id: z.string(),
+				name: z.string(),
+				symbol: z.string(),
+			})
+		),
+		id: z.string(),
+	}),
+});
+
+export type UserProfileResultType = z.infer<typeof UserProfileResult>;

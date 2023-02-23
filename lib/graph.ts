@@ -10,6 +10,8 @@ import {
 	GetClanResultType,
 	GetClansResults,
 	GetClansResultsType,
+	UserProfileResultType,
+	UserProfileResult,
 } from "./types";
 
 export const getNumberOfClans = async (): Promise<ClanCountResultType> => {
@@ -32,7 +34,7 @@ export const getClan = async (
 	const { data } = await client.query({
 		query: gql`
             {
-                clan(id: "${clanAddress}") {
+                clan(id: "${clanAddress.toLowerCase()}") {
                     id
                     name
                     symbol
@@ -81,4 +83,29 @@ export const getAnalytics = async (): Promise<GetAnalyticsResultType> => {
 	});
 
 	return GetAnalyticsResult.parse(data);
+};
+
+export const getUserProfile = async (
+	address: string
+): Promise<UserProfileResultType> => {
+	const { data } = await client.query({
+		query: gql`
+			{
+				user(id: "${address.toLowerCase()}") {
+					accounts {
+						platform
+						uuid
+					}
+					clans {
+						id
+						name
+						symbol
+					}
+					id
+				}
+			}
+		`,
+	});
+
+	return UserProfileResult.parse(data);
 };
