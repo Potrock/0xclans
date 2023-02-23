@@ -2,7 +2,15 @@ import Image from "next/image";
 import Link from "next/link";
 import logo from "../../assets/0xclans-logo.png";
 import { Disclosure } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+	ArrowRightCircleIcon,
+	ArrowRightIcon,
+	Bars3Icon,
+	XMarkIcon,
+} from "@heroicons/react/24/outline";
+import { ChangeEvent, useState } from "react";
+import { useProvider } from "wagmi";
+import { useRouter } from "next/router";
 
 const navigation = [
 	{ name: "Analytics", href: "/analytics", current: false },
@@ -15,6 +23,30 @@ function classNames(...classes: any[]) {
 }
 
 export const Navbar = () => {
+	const provider = useProvider();
+
+	const router = useRouter();
+
+	const [search, setSearch] = useState<string>("");
+
+	const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+		e.preventDefault();
+		setSearch(e.target.value);
+	};
+
+	const handleSearch = async (e: any) => {
+		e.preventDefault();
+		// Check if the target is a contract or a wallet address
+		// If it's a contract, redirect to the clan page
+		// If it's a wallet address, redirect to the profile page
+		// const code = await provider.getCode(search);
+		// if (code === "0x") {
+		// 	// It's a wallet address
+		router.push(`/profiles/${search}`);
+		// } else {
+		// 	// It's a contract
+		// 	router.push(`/clans/${search}`);
+	};
 	return (
 		<Disclosure as="nav" className="bg-gray-800">
 			{({ open }) => (
@@ -78,6 +110,23 @@ export const Navbar = () => {
 										))}
 									</div>
 								</div>
+								<>
+									<form
+										className="flex w-5/12 px-3 py-1 ml-auto mr-2 text-gray-300 placeholder-gray-500 bg-gray-900 border border-gray-600 rounded-md appearance-none focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+										onSubmit={handleSearch}
+									>
+										<input
+											className="w-full h-full px-3 py-2 text-gray-300 placeholder-gray-500 bg-transparent border-0 appearance-none focus:outline-none focus:ring-0"
+											placeholder="Search for an Address"
+											onChange={(e) => {
+												handleSearchChange(e);
+											}}
+										/>
+										<button onClick={handleSearch}>
+											<ArrowRightCircleIcon className="w-5 h-5" />
+										</button>
+									</form>
+								</>
 							</div>
 						</div>
 					</div>
