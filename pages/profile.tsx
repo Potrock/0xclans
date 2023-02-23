@@ -63,8 +63,8 @@ export default function Profile(props: ProfileProps) {
 					{!connected && props.wallet && (
 						<p className="text-red-500 ">
 							We have a wallet registered to your discord account,
-							but it's not currently connected to the page. Please
-							connect it using the button above.
+							but it&apos;s not currently connected to the page.
+							Please connect it using the button above.
 						</p>
 					)}
 				</div>
