@@ -50,27 +50,27 @@ export default function Profile(props: ProfileProps) {
 	return (
 		<div className="flex flex-col">
 			<p className="pt-16 text-3xl font-bold">Profile</p>
-			<div className="pt-2">
-				{/* <button
-					className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm disabled:bg-gray-700 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-					disabled={connected}
-					onClick={() => connect}
-				>
-					Connect Wallet
-				</button> */}
+			<div className="pt-4">
 				<ConnectButton />
-				<div>
+				<div className="pt-4">
 					{isDifferentAddress && (
-						<p className="pt-2 text-red-500">
+						<p className="text-red-500 ">
 							Your wallet address is different from the one in our
 							database. Please change accounts in your wallet or
 							contact support.
 						</p>
 					)}
+					{!connected && props.wallet && (
+						<p className="text-red-500 ">
+							We have a wallet registered to your discord account,
+							but it's not currently connected to the page. Please
+							connect it using the button above.
+						</p>
+					)}
 				</div>
 				{!props.wallet && <LinkWallet />}
 			</div>
-			<div className="pt-8">
+			<div className="pt-6">
 				<div className="">
 					<p className="text-xl font-semibold">Your Accounts</p>
 					<AccountTable accounts={props.accounts} />
