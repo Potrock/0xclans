@@ -1,4 +1,3 @@
-import { Button } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useSignMessage } from "wagmi";
@@ -29,14 +28,14 @@ export const LinkWallet = () => {
 
 	return (
 		<>
-			<Button
+			<button
+				className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm disabled:bg-gray-700 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
 				disabled={isLoading}
 				onClick={() => link()}
-				className="px-2"
 				color="success"
 			>
 				Link Wallet
-			</Button>
+			</button>
 		</>
 	);
 };

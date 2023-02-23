@@ -1,6 +1,7 @@
 import { LinkWallet } from "@/components/linking/LinkWallet";
 import { AccountTable } from "@/components/profile/table/AccountTable";
 import { getUserLinkedAccounts, getUserLinkedWallet } from "@/lib/db/utils";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { Session } from "next-auth";
 import { getSession } from "next-auth/react";
@@ -22,7 +23,6 @@ export default function Profile(props: ProfileProps) {
 	 * TODO: handle linkWallet=true in query
 	 */
 
-	const { connect } = useConnect();
 	const { address, isConnected } = useAccount();
 	const [connected, setConnected] = useState(false);
 	const [isDifferentAddress, setIsDifferentAddress] = useState(false);
@@ -51,13 +51,14 @@ export default function Profile(props: ProfileProps) {
 		<div className="flex flex-col">
 			<p className="pt-16 text-3xl font-bold">Profile</p>
 			<div className="pt-2">
-				<button
+				{/* <button
 					className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm disabled:bg-gray-700 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
 					disabled={connected}
 					onClick={() => connect}
 				>
 					Connect Wallet
-				</button>
+				</button> */}
+				<ConnectButton />
 				<div>
 					{isDifferentAddress && (
 						<p className="pt-2 text-red-500">
