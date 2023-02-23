@@ -1,16 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import logo from "../../assets/0xclans-logo.png";
-
-import { Fragment } from "react";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Disclosure } from "@headlessui/react";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 const navigation = [
 	{ name: "Analytics", href: "/analytics", current: false },
 	{ name: "Profile", href: "/profile", current: false },
 	{ name: "Clans", href: "/clans", current: false },
-	// { name: "Calendar", href: "#", current: false },
 ];
 
 function classNames(...classes: any[]) {
@@ -43,21 +40,23 @@ export const Navbar = () => {
 									)}
 								</Disclosure.Button>
 							</div>
-							<div className="flex items-center justify-center flex-1 sm:items-stretch sm:justify-start">
+							<div className="flex items-center justify-center flex-1 ml-auto sm:items-stretch sm:justify-start">
 								<div className="flex items-center flex-shrink-0">
-									<Image
-										className="block w-auto h-8 lg:hidden"
-										src={logo}
-										alt="0xClans"
-									/>
-									<Image
-										className="hidden w-auto h-10 lg:block"
-										src={logo}
-										alt="0xClans"
-									/>
+									<Link href="/">
+										<Image
+											className="block w-auto h-10 lg:hidden"
+											src={logo}
+											alt="0xClans"
+										/>
+										<Image
+											className="hidden w-auto h-10 lg:block"
+											src={logo}
+											alt="0xClans"
+										/>
+									</Link>
 								</div>
 								<div className="hidden sm:ml-6 sm:block">
-									<div className="flex space-x-4">
+									<div className="flex ml-auto space-x-4">
 										{navigation.map((item) => (
 											<Link
 												key={item.name}
@@ -66,7 +65,7 @@ export const Navbar = () => {
 													item.current
 														? "bg-gray-900 text-white"
 														: "text-gray-300 hover:bg-gray-700 hover:text-white",
-													"px-3 py-2 rounded-md text-sm font-medium"
+													"px-3 py-2 rounded-md text-md font-medium"
 												)}
 												aria-current={
 													item.current

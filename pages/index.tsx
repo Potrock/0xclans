@@ -11,6 +11,7 @@ import {
 } from "@heroicons/react/24/outline";
 import gaminghero from "../assets/gaminghero.png";
 import Image from "next/image";
+import Link from "next/link";
 
 type Props = {
 	accounts?: {
@@ -36,13 +37,13 @@ export default function Home(props: Props) {
 						0xClans to easily create, deploy, and manage
 						decentralized gaming clans on the Polygon Network.
 					</p>
-					<a
-						href="#features"
+					<Link
+						href="/auth/signin"
 						className="inline-flex items-center px-6 py-4 mb-4 text-lg font-medium text-white bg-yellow-400 rounded-md hover:bg-yellow-500"
 					>
 						Get Started
 						<ArrowRightIcon className="ml-2" />
-					</a>
+					</Link>
 				</div>
 				<div className="md:w-1/2">
 					<Image

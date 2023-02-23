@@ -40,7 +40,11 @@ export default function Profile(props: ProfileProps) {
 	}, [isConnected, address, props.wallet]);
 
 	useEffect(() => {
-		setConnected(true);
+		if (isConnected) {
+			setConnected(true);
+		} else {
+			setConnected(false);
+		}
 	}, [isConnected]);
 
 	return (
