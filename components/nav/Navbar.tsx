@@ -2,92 +2,111 @@ import Image from "next/image";
 import Link from "next/link";
 import logo from "../../assets/0xclans-logo.png";
 
+import { Fragment } from "react";
+import { Disclosure, Menu, Transition } from "@headlessui/react";
+import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+
+const navigation = [
+	{ name: "Analytics", href: "/analytics", current: false },
+	{ name: "Profile", href: "/profile", current: false },
+	{ name: "Clans", href: "/clans", current: false },
+	// { name: "Calendar", href: "#", current: false },
+];
+
+function classNames(...classes: any[]) {
+	return classes.filter(Boolean).join(" ");
+}
+
 export const Navbar = () => {
 	return (
-		<nav className=" border-gray-200 px-2 sm:px-4 py-2.5 rounded bg-gray-900">
-			<div className="container flex flex-wrap items-center justify-between mx-auto">
-				<Link href="/" className="flex items-center">
-					<div className="flex">
-						<Image
-							src={logo}
-							width={75}
-							height={75}
-							alt="0xClans Logo"
-						/>
-						<span className="self-center pl-4 text-2xl font-semibold text-transparent bg-gradient-to-r from-rose-400 to-yellow-300 bg-clip-text whitespace-nowrap">
-							0xClans
-						</span>
+		<Disclosure as="nav" className="bg-gray-800">
+			{({ open }) => (
+				<>
+					<div className="px-2 mx-auto max-w-7xl sm:px-6 lg:px-8">
+						<div className="relative flex items-center justify-between h-16">
+							<div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
+								{/* Mobile menu button*/}
+								<Disclosure.Button className="inline-flex items-center justify-center p-2 text-gray-400 rounded-md hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+									<span className="sr-only">
+										Open main menu
+									</span>
+									{open ? (
+										<XMarkIcon
+											className="block w-6 h-6"
+											aria-hidden="true"
+										/>
+									) : (
+										<Bars3Icon
+											className="block w-6 h-6"
+											aria-hidden="true"
+										/>
+									)}
+								</Disclosure.Button>
+							</div>
+							<div className="flex items-center justify-center flex-1 sm:items-stretch sm:justify-start">
+								<div className="flex items-center flex-shrink-0">
+									<Image
+										className="block w-auto h-8 lg:hidden"
+										src={logo}
+										alt="0xClans"
+									/>
+									<Image
+										className="hidden w-auto h-10 lg:block"
+										src={logo}
+										alt="0xClans"
+									/>
+								</div>
+								<div className="hidden sm:ml-6 sm:block">
+									<div className="flex space-x-4">
+										{navigation.map((item) => (
+											<Link
+												key={item.name}
+												href={item.href}
+												className={classNames(
+													item.current
+														? "bg-gray-900 text-white"
+														: "text-gray-300 hover:bg-gray-700 hover:text-white",
+													"px-3 py-2 rounded-md text-sm font-medium"
+												)}
+												aria-current={
+													item.current
+														? "page"
+														: undefined
+												}
+											>
+												{item.name}
+											</Link>
+										))}
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
-				</Link>
-				<button
-					data-collapse-toggle="navbar-default"
-					type="button"
-					className="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-					aria-controls="navbar-default"
-					aria-expanded="false"
-				>
-					<span className="sr-only">Open main menu</span>
-					<svg
-						className="w-6 h-6"
-						aria-hidden="true"
-						fill="currentColor"
-						viewBox="0 0 20 20"
-						xmlns="http://www.w3.org/2000/svg"
-					>
-						<path
-							fillRule="evenodd"
-							d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-							clipRule="evenodd"
-						></path>
-					</svg>
-				</button>
-				<div
-					className="hidden w-full md:block md:w-auto"
-					id="navbar-default"
-				>
-					<ul className="flex flex-col p-4 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-gray-900 dark:border-gray-700">
-						<li>
-							<Link
-								href="/analytics"
-								className="block py-2 pl-3 pr-4 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-							>
-								Analytics
-							</Link>
-						</li>
-						<li>
-							<Link
-								href="/dashboard"
-								className="block py-2 pl-3 pr-4 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-							>
-								Dashboard
-							</Link>
-						</li>
-						<li>
-							<Link href="/profile">
-								<span className="block py-2 pl-3 pr-4 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-									Profile
-								</span>
-							</Link>
-						</li>
-						<li>
-							<Link
-								href="/clans"
-								className="block py-2 pl-3 pr-4 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-							>
-								Clans
-							</Link>
-						</li>
-						{/* <li>
-							<a
-								href="#"
-								className="block py-2 pl-3 pr-4 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-							>
-								Contact
-							</a>
-						</li> */}
-					</ul>
-				</div>
-			</div>
-		</nav>
+
+					<Disclosure.Panel className="sm:hidden">
+						<div className="px-2 pt-2 pb-3 space-y-1">
+							{navigation.map((item) => (
+								<Disclosure.Button
+									key={item.name}
+									as="a"
+									href={item.href}
+									className={classNames(
+										item.current
+											? "bg-gray-900 text-white"
+											: "text-gray-300 hover:bg-gray-700 hover:text-white",
+										"block px-3 py-2 rounded-md text-base font-medium"
+									)}
+									aria-current={
+										item.current ? "page" : undefined
+									}
+								>
+									{item.name}
+								</Disclosure.Button>
+							))}
+						</div>
+					</Disclosure.Panel>
+				</>
+			)}
+		</Disclosure>
 	);
 };
