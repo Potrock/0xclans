@@ -73,7 +73,7 @@ export default function Home(props: Props) {
 						<div className="flex items-center mb-4">
 							<LinkIcon className="w-9/12 mr-4 text-4xl" />
 							<h3 className="text-2xl font-bold text-gray-200">
-								Link Your Game Accounts
+								Cross Platform Linking
 							</h3>
 						</div>
 						<p className="text-lg">

@@ -88,8 +88,6 @@ export const getServerSideProps: GetServerSideProps = async ({
 }: GetServerSidePropsContext) => {
 	const analytics: GetAnalyticsResultType = await getAnalytics();
 
-	console.log(analytics);
-
 	return {
 		props: {
 			userCount: analytics.userFactory.userCount,
