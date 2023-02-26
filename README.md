@@ -1,6 +1,6 @@
 ## 0xClans Web App
 
-OxClans is a fully on-chain account linking and clan creation protocol built in Solidity for the Polygon network.
+0xClans is a fully on-chain account linking and clan creation protocol built in Solidity for the Polygon network.
 
 ![0xClans Logo](https://qnuppwlkqgctjdgodvkm.supabase.co/storage/v1/object/public/0xclans/0xclans-logo.png)
 
