@@ -16,7 +16,7 @@ export default function ProfilePage({
 		<div className="p-4 max-w-7xl max-auto">
 			<div className="grid grid-cols-5 gap-4">
 				<div className="col-span-2">
-					<ProfilePicture address={userProfile.user.id} />
+					<ProfilePicture address={userProfile.user.id} url={null} />
 					<button
 						className="w-full"
 						onClick={() => {
