@@ -38,6 +38,9 @@ export const Listing = ({ clans }: ListingProps) => {
 									>
 										Contract
 									</th>
+									<th scope="col">
+
+									</th>
 								</tr>
 							</thead>
 							<tbody>
