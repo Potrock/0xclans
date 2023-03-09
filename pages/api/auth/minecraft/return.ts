@@ -35,14 +35,11 @@ export default getHandler()
 		let minecraft = await connectMinecraftToUser(mcInfo, dbUser?.id || "");
 
 		if (minecraft) {
-			console.log(minecraft.userId);
 			const approvalSig = await approveLink(
 				minecraft.userId,
 				minecraft.id,
 				"minecraft"
 			);
-
-			console.log(approvalSig);
 			if (approvalSig) {
 				res.redirect(
 					`/dashboard?link=true&platform=minecraft&id=${minecraft.id}&sig=${approvalSig}`

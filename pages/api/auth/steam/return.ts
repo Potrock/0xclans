@@ -38,14 +38,11 @@ export default getHandler().get(
 		let steam = await connectSteamToUser(steamID, dbUser?.id || "");
 
 		if (steam) {
-			console.log(steam.userId);
 			const approvalSig = await approveLink(
 				steam.userId,
 				steam.id,
 				"steam"
 			);
-
-			console.log(approvalSig);
 			if (approvalSig) {
 				res.redirect(
 					`/dashboard?link=true&platform=steam&id=${steam.id}&sig=${approvalSig}`
