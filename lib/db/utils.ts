@@ -155,7 +155,6 @@ export async function approveLink(
 			},
 		})) ?? null;
 	if (wallet && wallet.address) {
-		console.log(wallet.address);
 		const sig = authorizeLink(
 			wallet.address.toLowerCase(),
 			platformId.toLowerCase(),
@@ -207,7 +206,6 @@ export async function getLinkApprovalSig(userID: string, platformName: string) {
 			},
 		})) ?? null;
 	if (wallet && wallet.address && platformUUID.id) {
-		console.log(wallet.address);
 		const sig = authorizeLink(
 			wallet.address.toLowerCase(),
 			platformUUID.id.toLowerCase(),
