@@ -26,11 +26,13 @@ export default getHandler()
 		const session = await getSession({ req });
 		if (!session?.user.id) {
 			res.redirect("/");
+			return;
 		}
 		const mcInfo = req.user as { uuid: string; name: string };
 		const dbUser = await getUserByID(session?.user.id || "");
 		if (!dbUser) {
 			res.redirect("/");
+			return;
 		}
 		let minecraft = await connectMinecraftToUser(mcInfo, dbUser?.id || "");
 
@@ -44,6 +46,7 @@ export default getHandler()
 				res.redirect(
 					`/dashboard?link=true&platform=minecraft&id=${minecraft.id}&sig=${approvalSig}`
 				);
+				return;
 			}
 		}
 
