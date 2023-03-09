@@ -2,7 +2,7 @@ import { useAccount, useContractRead } from "wagmi";
 import AccountLinker from "contracts/AccountLinker.json";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { Button } from "../elements/Button";
+import { Button } from "../../elements/Button";
 
 export const Linker = ({ platformName }: { platformName: string }) => {
 	const [isLinked, setIsLinked] = useState(false);
@@ -11,12 +11,13 @@ export const Linker = ({ platformName }: { platformName: string }) => {
 	const { data: currLinkedId } = useContractRead({
 		address: AccountLinker.address as `0x${string}`,
 		abi: AccountLinker.abi,
-		functionName: "getUuidByAddressByPlatform",
+		functionName: "getUuidByPlatformByPlayer",
 		args: [address, platformName.toLowerCase()],
+		enabled: address !== undefined && platformName !== undefined,
 	});
 
 	useEffect(() => {
-		if (currLinkedId !== "") {
+		if (currLinkedId !== undefined && currLinkedId) {
 			setIsLinked(true);
 		}
 	}, [currLinkedId]);

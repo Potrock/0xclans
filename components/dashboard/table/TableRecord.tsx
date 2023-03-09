@@ -1,4 +1,4 @@
-import { Linker } from "@/components/linking/Linker";
+import { Linker } from "@/components/dashboard/linking/Linker";
 
 type TableRecordProps = {
 	accountType: string;

@@ -1,39 +1,48 @@
-import { CompleteAuthModal } from "@/components/linking/CompleteAuthModal";
-import { LinkWallet } from "@/components/linking/LinkWallet";
-import { AccountTable } from "@/components/profile/table/AccountTable";
+import { CompleteAuthModal } from "@/components/dashboard/linking/CompleteAuthModal";
+import { LinkWallet } from "@/components/dashboard/linking/LinkWallet";
+import { AccountTable } from "@/components/dashboard/table/AccountTable";
 import { getUserLinkedAccounts, getUserLinkedWallet } from "@/lib/db/utils";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { Session } from "next-auth";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import {
-	useAccount,
-	useConnect,
-	useContractWrite,
-	usePrepareContractWrite,
-} from "wagmi";
+import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 import AccountLinker from "contracts/AccountLinker.json";
+import { getUserProfile } from "@/lib/graph";
+import { ClanTable } from "@/components/dashboard/clans/ClanTable";
+import { Button } from "@/components/elements/Button";
+import Link from "next/link";
 
 type ProfileProps = {
 	accounts?: {
 		minecraft?: string;
 		steam?: string;
 	};
-	session: Session;
 	wallet?: {
 		address: string;
 	};
+	link?: {
+		linking: boolean;
+		platform: string;
+		sig: string;
+		plaformId: string;
+	};
+	clans?: {
+		name: string;
+		id: string;
+		symbol: string;
+	}[];
+	session: Session;
 };
-export default function Profile(props: ProfileProps) {
+export default function Dashboard(props: ProfileProps) {
 	const { address, isConnected } = useAccount();
 	const [connected, setConnected] = useState(false);
 	const [isDifferentAddress, setIsDifferentAddress] = useState(false);
-	const [authSig, setAuthSig] = useState("");
-	const [authPlatform, setAuthPlatform] = useState("");
-	const [platformId, setPlatformId] = useState("");
 	const [showCompleteAuthFlow, setShowCompleteAuthFlow] = useState(false);
+
+	const { data: session } = useSession();
 
 	const router = useRouter();
 
@@ -41,8 +50,12 @@ export default function Profile(props: ProfileProps) {
 		address: AccountLinker.address as `0x${string}`,
 		abi: AccountLinker.abi,
 		functionName: "linkPlayerToUuidByPlatform",
-		args: [platformId, authPlatform.toLowerCase(), authSig],
-		enabled: authSig !== "" && authPlatform !== "" && platformId !== "",
+		args: [
+			props.link?.plaformId,
+			props.link?.platform.toLowerCase(),
+			props.link?.sig,
+		],
+		enabled: props.link && props.link.linking,
 	});
 
 	const { write: linkChain, isLoading, isSuccess } = useContractWrite(config);
@@ -53,22 +66,19 @@ export default function Profile(props: ProfileProps) {
 	 */
 	useEffect(() => {
 		if (
-			router.query.link === "true" &&
-			router.query.sig &&
-			router.query.platform &&
-			router.query.id &&
-			props.wallet?.address
+			props.link &&
+			props.link.linking &&
+			props.link.platform &&
+			props.link.sig &&
+			props.link.plaformId
 		) {
 			setShowCompleteAuthFlow(true);
-			setAuthSig(router.query.sig as string);
-			setAuthPlatform(router.query.platform as string);
-			setPlatformId(router.query.id as string);
 		}
 	}, []);
 
 	useEffect(() => {
 		if (isSuccess) {
-			router.replace("/profile");
+			router.replace("/dashboard");
 		}
 	}, [isLoading]);
 
@@ -94,22 +104,26 @@ export default function Profile(props: ProfileProps) {
 
 	return (
 		<>
-			{linkChain && (
+			{props.link && (
 				<CompleteAuthModal
 					link={{
-						platform: authPlatform,
-						id: platformId,
-						sig: authSig,
+						platform: props.link.platform,
+						id: props.link.plaformId,
+						sig: props.link.sig,
 						wallet: props.wallet?.address || "",
-						write: linkChain,
+						write: linkChain ?? (() => {}),
 					}}
 					show={showCompleteAuthFlow}
 					setShow={setShowCompleteAuthFlow}
 				/>
 			)}
 			<div className="flex flex-col">
-				<p className="pt-16 text-3xl font-bold">Profile</p>
-				<div className="pt-4">
+				{session && (
+					<p className="pt-8 text-3xl font-bold">
+						Welcome back, {session.user.name}
+					</p>
+				)}
+				<div className="pt-8">
 					<ConnectButton />
 					<div className="pt-4">
 						{isDifferentAddress && (
@@ -136,6 +150,23 @@ export default function Profile(props: ProfileProps) {
 						<AccountTable accounts={props.accounts} />
 					</div>
 				</div>
+				<div>
+					<p className="pt-6 text-xl font-semibold">Your Clans</p>
+					{props.clans && <ClanTable clans={props.clans} />}
+					{!props.clans && (
+						<>
+							<p className="pt-4">
+								You don&apos;t have any clans yet. Create one
+								using the button below.
+							</p>
+							<Link href="/clans">
+								<Button>
+									<span>Clan Dashboard</span>
+								</Button>
+							</Link>
+						</>
+					)}
+				</div>
 			</div>
 		</>
 	);
@@ -144,26 +175,52 @@ export default function Profile(props: ProfileProps) {
 export const getServerSideProps: GetServerSideProps = async ({
 	req,
 	res,
+	params,
 }: GetServerSidePropsContext) => {
 	const session = await getSession({ req });
 	if (session) {
+		let props = {};
 		const userAccounts = await getUserLinkedAccounts(session.user.id);
 
 		const wallet = await getUserLinkedWallet(session.user.id);
 
-		if (userAccounts && (userAccounts.steam || userAccounts.minecraft)) {
-			return {
-				props: {
-					session: session,
-					accounts: userAccounts,
-					wallet: wallet,
-				},
-			};
-		} else {
-			return {
-				props: { session: session },
-			};
+		if (wallet) {
+			const clans = await getUserProfile(wallet.address);
+			if (clans) {
+				props = { ...props, clans: clans.user.clans };
+			}
 		}
+
+		props = { ...props, session: session };
+
+		if (userAccounts && (userAccounts.steam || userAccounts.minecraft)) {
+			props = { ...props, accounts: userAccounts };
+		}
+
+		if (wallet) {
+			props = { ...props, wallet: wallet };
+		}
+
+		if (params) {
+			if (
+				params.link === "true" &&
+				params.sig &&
+				params.platform &&
+				params.id
+			) {
+				props = {
+					...props,
+					link: {
+						linking: true,
+						platform: params.platform as string,
+						sig: params.sig as string,
+						plaformId: params.id as string,
+					},
+				};
+			}
+		}
+
+		return { props: props };
 	}
 	return { redirect: { destination: "/auth/signin", permanent: false } };
 };

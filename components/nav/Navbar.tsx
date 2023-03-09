@@ -14,7 +14,7 @@ import { useRouter } from "next/router";
 
 const navigation = [
 	{ name: "Analytics", href: "/analytics", current: false },
-	{ name: "Profile", href: "/profile", current: false },
+	{ name: "Dashboard", href: "/dashboard", current: false },
 	{ name: "Clans", href: "/clans", current: false },
 ];
 

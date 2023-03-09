@@ -13,23 +13,30 @@ import {
 	UserProfileResult,
 } from "./types";
 
-export const getNumberOfClans = async (): Promise<ClanCountResultType> => {
-	const { data } = await client.query({
-		query: gql`
-			{
-				clanFactory(id: "0x7372d48Fb9A1c52AA7E6D99c1C84Cc47D294196A") {
-					clanCount
+export const getNumberOfClans =
+	async (): Promise<ClanCountResultType | null> => {
+		const { data } = await client.query({
+			query: gql`
+				{
+					clanFactory(
+						id: "0x7372d48Fb9A1c52AA7E6D99c1C84Cc47D294196A"
+					) {
+						clanCount
+					}
 				}
-			}
-		`,
-	});
+			`,
+		});
 
-	return ClanCountResult.parse(data);
-};
+		try {
+			return ClanCountResult.parse(data.clanFactory);
+		} catch (e) {
+			return null;
+		}
+	};
 
 export const getClan = async (
 	clanAddress: string
-): Promise<GetClanResultType> => {
+): Promise<GetClanResultType | null> => {
 	const { data } = await client.query({
 		query: gql`
             {
@@ -44,10 +51,14 @@ export const getClan = async (
             }`,
 	});
 
-	return GetClanResult.parse(data.clan);
+	try {
+		return GetClanResult.parse(data.clan);
+	} catch (e) {
+		return null;
+	}
 };
 
-export const getClans = async (): Promise<GetClansResultsType> => {
+export const getClans = async (): Promise<GetClansResultsType | null> => {
 	const { data } = await client.query({
 		query: gql`
 			{
@@ -63,7 +74,11 @@ export const getClans = async (): Promise<GetClansResultsType> => {
 		`,
 	});
 
-	return GetClansResults.parse(data.clans);
+	try {
+		return GetClansResults.parse(data.clans);
+	} catch (e) {
+		return null;
+	}
 };
 
 export const getAnalytics = async (): Promise<GetAnalyticsResultType> => {
@@ -86,7 +101,7 @@ export const getAnalytics = async (): Promise<GetAnalyticsResultType> => {
 
 export const getUserProfile = async (
 	address: string
-): Promise<UserProfileResultType> => {
+): Promise<UserProfileResultType | null> => {
 	const { data } = await client.query({
 		query: gql`
 			{
@@ -106,5 +121,9 @@ export const getUserProfile = async (
 		`,
 	});
 
-	return UserProfileResult.parse(data);
+	try {
+		return UserProfileResult.parse(data);
+	} catch (e) {
+		return null;
+	}
 };

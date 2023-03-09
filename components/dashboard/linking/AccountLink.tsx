@@ -5,7 +5,7 @@ import {
 	usePrepareContractWrite,
 	useSignMessage,
 } from "wagmi";
-import AccountLinker from "../../contracts/AccountLinker.json";
+import AccountLinker from "../../../contracts/AccountLinker.json";
 
 type AccountLinkProps = {
 	platform: string;
