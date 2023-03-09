@@ -8,7 +8,13 @@ import { Session } from "next-auth";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useAccount, useConnect } from "wagmi";
+import {
+	useAccount,
+	useConnect,
+	useContractWrite,
+	usePrepareContractWrite,
+} from "wagmi";
+import AccountLinker from "contracts/AccountLinker.json";
 
 type ProfileProps = {
 	accounts?: {
@@ -21,10 +27,6 @@ type ProfileProps = {
 	};
 };
 export default function Profile(props: ProfileProps) {
-	/**
-	 * TODO: handle link=true in query
-	 */
-
 	const { address, isConnected } = useAccount();
 	const [connected, setConnected] = useState(false);
 	const [isDifferentAddress, setIsDifferentAddress] = useState(false);
@@ -35,6 +37,20 @@ export default function Profile(props: ProfileProps) {
 
 	const router = useRouter();
 
+	const { config } = usePrepareContractWrite({
+		address: AccountLinker.address as `0x${string}`,
+		abi: AccountLinker.abi,
+		functionName: "linkPlayerToUuidByPlatform",
+		args: [platformId, authPlatform.toLowerCase(), authSig],
+		enabled: authSig !== "" && authPlatform !== "" && platformId !== "",
+	});
+
+	const { write: linkChain, isLoading, isSuccess } = useContractWrite(config);
+
+	/**
+	 * @todo
+	 * Convert this to SSR props
+	 */
 	useEffect(() => {
 		if (
 			router.query.link === "true" &&
@@ -49,6 +65,12 @@ export default function Profile(props: ProfileProps) {
 			setPlatformId(router.query.id as string);
 		}
 	}, []);
+
+	useEffect(() => {
+		if (isSuccess) {
+			router.replace("/profile");
+		}
+	}, [isLoading]);
 
 	useEffect(() => {
 		if (isConnected) {
@@ -72,16 +94,19 @@ export default function Profile(props: ProfileProps) {
 
 	return (
 		<>
-			<CompleteAuthModal
-				link={{
-					platform: authPlatform,
-					id: platformId,
-					sig: authSig,
-					wallet: props.wallet?.address || "",
-				}}
-				show={showCompleteAuthFlow}
-				setShow={setShowCompleteAuthFlow}
-			/>
+			{linkChain && (
+				<CompleteAuthModal
+					link={{
+						platform: authPlatform,
+						id: platformId,
+						sig: authSig,
+						wallet: props.wallet?.address || "",
+						write: linkChain,
+					}}
+					show={showCompleteAuthFlow}
+					setShow={setShowCompleteAuthFlow}
+				/>
+			)}
 			<div className="flex flex-col">
 				<p className="pt-16 text-3xl font-bold">Profile</p>
 				<div className="pt-4">

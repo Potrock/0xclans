@@ -11,6 +11,7 @@ type CreateClanSuccessModalProps = {
 		platform: string;
 		id: string;
 		sig: string;
+		write: () => void;
 	};
 	show: boolean;
 	setShow: any;
@@ -23,21 +24,9 @@ export const CompleteAuthModal = ({
 }: CreateClanSuccessModalProps) => {
 	const cancelButtonRef = useRef(null);
 
-	const { config } = usePrepareContractWrite({
-		address: AccountLinker.address as `0x${string}`,
-		abi: AccountLinker.abi,
-		functionName: "linkPlayerToUuidByPlatform",
-		args: [link.id, link.platform.toLowerCase(), link.sig],
-		enabled: link.sig === "" ? false : true,
-	});
-
-	const { write: linkChain } = useContractWrite(config);
-
 	function onButtonClick() {
-		if (linkChain) {
-			linkChain();
-			setShow(false);
-		}
+		link.write();
+		setShow(false);
 	}
 
 	return (
