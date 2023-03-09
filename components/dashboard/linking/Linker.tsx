@@ -18,6 +18,7 @@ export const Linker = ({ platformName }: { platformName: string }) => {
 
 	useEffect(() => {
 		if (currLinkedId !== undefined && currLinkedId) {
+			console.log(platformName);
 			setIsLinked(true);
 		}
 	}, [currLinkedId]);

@@ -48,7 +48,7 @@ export default getHandler().get(
 			console.log(approvalSig);
 			if (approvalSig) {
 				res.redirect(
-					`/profile?link=true&platform=steam&id=${steam.id}&sig=${approvalSig}`
+					`/dashboard?link=true&platform=steam&id=${steam.id}&sig=${approvalSig}`
 				);
 			}
 		}

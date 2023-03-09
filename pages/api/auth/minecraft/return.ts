@@ -45,7 +45,7 @@ export default getHandler()
 			console.log(approvalSig);
 			if (approvalSig) {
 				res.redirect(
-					`/profile?link=true&platform=minecraft&id=${minecraft.id}&sig=${approvalSig}`
+					`/dashboard?link=true&platform=minecraft&id=${minecraft.id}&sig=${approvalSig}`
 				);
 			}
 		}

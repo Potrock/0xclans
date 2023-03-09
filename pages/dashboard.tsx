@@ -58,7 +58,12 @@ export default function Dashboard(props: ProfileProps) {
 		enabled: props.link && props.link.linking,
 	});
 
-	const { write: linkChain, isLoading, isSuccess } = useContractWrite(config);
+	const {
+		write: linkChain,
+		isLoading,
+		isSuccess,
+		isError,
+	} = useContractWrite(config);
 
 	/**
 	 * @todo
@@ -77,7 +82,7 @@ export default function Dashboard(props: ProfileProps) {
 	}, []);
 
 	useEffect(() => {
-		if (isSuccess) {
+		if (isSuccess || isError) {
 			router.replace("/dashboard");
 		}
 	}, [isLoading]);
@@ -175,7 +180,7 @@ export default function Dashboard(props: ProfileProps) {
 export const getServerSideProps: GetServerSideProps = async ({
 	req,
 	res,
-	params,
+	query,
 }: GetServerSidePropsContext) => {
 	const session = await getSession({ req });
 	if (session) {
@@ -201,20 +206,20 @@ export const getServerSideProps: GetServerSideProps = async ({
 			props = { ...props, wallet: wallet };
 		}
 
-		if (params) {
+		if (query) {
 			if (
-				params.link === "true" &&
-				params.sig &&
-				params.platform &&
-				params.id
+				query.link === "true" &&
+				query.sig &&
+				query.platform &&
+				query.id
 			) {
 				props = {
 					...props,
 					link: {
 						linking: true,
-						platform: params.platform as string,
-						sig: params.sig as string,
-						plaformId: params.id as string,
+						platform: query.platform as string,
+						sig: query.sig as string,
+						plaformId: query.id as string,
 					},
 				};
 			}
