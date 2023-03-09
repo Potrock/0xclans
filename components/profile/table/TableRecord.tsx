@@ -1,6 +1,5 @@
 import { DatabaseLinker } from "@/components/linking/DatabaseLinker";
-import { OnchainLinker } from "@/components/linking/OnchainLinker";
-import { Table } from "flowbite-react";
+import { OnchainStatus } from "@/components/linking/OnchainStatus";
 
 type TableRecordProps = {
 	accountType: string;
@@ -24,7 +23,7 @@ export const TableRecord = ({
 					)}
 				</td>
 				<td className="px-6 py-4 text-sm font-medium text-gray-200 whitespace-nowrap">
-					<OnchainLinker
+					<OnchainStatus
 						platformName={accountType}
 						uuid={accountValue || ""}
 						isActive={accountValue ? true : false}

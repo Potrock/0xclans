@@ -1,4 +1,3 @@
-import { Table } from "flowbite-react";
 import { TableRecord } from "./TableRecord";
 
 type AccountTableProps = {

@@ -1,4 +1,9 @@
-import { connectSteamToUser, getUserByID } from "@/lib/db/utils";
+import {
+	approveLink,
+	connectSteamToUser,
+	getLinkApprovalSig,
+	getUserByID,
+} from "@/lib/db/utils";
 import getHandler from "@/lib/oauth/router";
 import { getSteamIDFromURL } from "@/lib/utils";
 import { getSession } from "next-auth/react";
@@ -30,8 +35,24 @@ export default getHandler().get(
 			res.redirect("/");
 		}
 
-		let steam = connectSteamToUser(steamID, dbUser?.id || "");
+		let steam = await connectSteamToUser(steamID, dbUser?.id || "");
 
-		res.redirect("/?success=1");
+		if (steam) {
+			console.log(steam.userId);
+			const approvalSig = await approveLink(
+				steam.userId,
+				steam.id,
+				"steam"
+			);
+
+			console.log(approvalSig);
+			if (approvalSig) {
+				res.redirect(
+					`/profile?link=true&platform=steam&id=${steam.id}&sig=${approvalSig}`
+				);
+			}
+		}
+
+		res.redirect("/");
 	}
 );

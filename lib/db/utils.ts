@@ -39,6 +39,16 @@ export async function connectMinecraftToUser(
 	mcInfo: { uuid: string; name: string },
 	userID: string
 ) {
+	// If the user already has a linked minecraft account, delete it
+	const existingMinecraft = await prisma.minecraft.findUnique({
+		where: {
+			userId: userID,
+		},
+	});
+	if (existingMinecraft) {
+		await disconnectMinecraftFromUser(userID);
+	}
+
 	const minecraft = await prisma.minecraft.create({
 		data: {
 			id: mcInfo.uuid,
@@ -62,6 +72,16 @@ export async function disconnectMinecraftFromUser(userID: string) {
 }
 
 export async function connectSteamToUser(steamID: string, userId: string) {
+	// If the user already has a linked steam account, delete it
+	const existingSteam = await prisma.steam.findUnique({
+		where: {
+			userId: userId,
+		},
+	});
+	if (existingSteam) {
+		await disconnectSteamFromUser(userId);
+	}
+
 	const steam = await prisma.steam.create({
 		data: {
 			id: steamID,
@@ -118,6 +138,36 @@ export async function disconnectWalletFromUser(userID: string) {
 		},
 	});
 	return wallet;
+}
+
+export async function approveLink(
+	userId: string,
+	platformId: string,
+	platformName: string
+) {
+	const wallet =
+		(await prisma.wallet.findUnique({
+			where: {
+				userId: userId,
+			},
+			select: {
+				address: true,
+			},
+		})) ?? null;
+	if (wallet && wallet.address) {
+		console.log(wallet.address);
+		const sig = authorizeLink(
+			wallet.address.toLowerCase(),
+			platformId.toLowerCase(),
+			platformName.toLowerCase()
+		);
+
+		if (sig) {
+			return sig;
+		}
+	} else {
+		return null;
+	}
 }
 
 export async function getLinkApprovalSig(userID: string, platformName: string) {
