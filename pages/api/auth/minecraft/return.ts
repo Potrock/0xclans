@@ -25,13 +25,13 @@ export default getHandler()
 	.get(path, async (req: any, res: AuthReturnResponse) => {
 		const session = await getSession({ req });
 		if (!session?.user.id) {
-			res.redirect("/");
+			res.redirect("/dashboard?error=session");
 			return;
 		}
 		const mcInfo = req.user as { uuid: string; name: string };
 		const dbUser = await getUserByID(session?.user.id || "");
 		if (!dbUser) {
-			res.redirect("/");
+			res.redirect("/dashboard?error=db");
 			return;
 		}
 		let minecraft = await connectMinecraftToUser(mcInfo, dbUser?.id || "");
@@ -47,8 +47,11 @@ export default getHandler()
 					`/dashboard?link=true&platform=minecraft&id=${minecraft.id}&sig=${approvalSig}`
 				);
 				return;
+			} else {
+				res.redirect("/dashboard?error=sig");
+				return;
 			}
 		}
 
-		res.redirect("/");
+		res.redirect("/dashboard?error=link");
 	});

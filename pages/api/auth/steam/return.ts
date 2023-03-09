@@ -21,20 +21,20 @@ export default getHandler().get(
 	async (req: any, res: AuthReturnResponse) => {
 		let idLink = req.query["openid.claimed_id"];
 		if (!idLink) {
-			res.redirect("/");
+			res.redirect("/dashboard?error=steam");
 			return;
 		}
 		const steamID = getSteamIDFromURL(idLink);
 
 		const session = await getSession({ req });
 		if (!session?.user.id) {
-			res.redirect("/");
+			res.redirect("/dashboard?error=session");
 			return;
 		}
 
 		const dbUser = await getUserByID(session?.user.id || "");
 		if (!dbUser) {
-			res.redirect("/");
+			res.redirect("/dashboard?error=db");
 			return;
 		}
 
@@ -51,9 +51,12 @@ export default getHandler().get(
 					`/dashboard?link=true&platform=steam&id=${steam.id}&sig=${approvalSig}`
 				);
 				return;
+			} else {
+				res.redirect("/dashboard?error=sig");
+				return;
 			}
 		}
 
-		res.redirect("/");
+		res.redirect("/dashbaord?error=link");
 	}
 );
