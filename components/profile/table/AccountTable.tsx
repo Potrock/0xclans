@@ -26,12 +26,6 @@ export const AccountTable = ({ accounts }: AccountTableProps) => {
 										scope="col"
 										className="px-6 py-4 text-sm font-medium text-left text-white"
 									>
-										0xClans Database
-									</th>
-									<th
-										scope="col"
-										className="px-6 py-4 text-sm font-medium text-left text-white"
-									>
 										On Chain Status
 									</th>
 								</tr>

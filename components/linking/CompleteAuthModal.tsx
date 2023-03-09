@@ -2,8 +2,6 @@ import { truncateAddress } from "@/utils/helpers";
 import { Dialog, Transition } from "@headlessui/react";
 import React, { Fragment, useRef, useState } from "react";
 import { CheckIcon } from "@heroicons/react/24/outline";
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
-import AccountLinker from "contracts/AccountLinker.json";
 
 type CreateClanSuccessModalProps = {
 	link: {

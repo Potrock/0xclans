@@ -1,5 +1,4 @@
-import { DatabaseLinker } from "@/components/linking/DatabaseLinker";
-import { OnchainStatus } from "@/components/linking/OnchainStatus";
+import { Linker } from "@/components/linking/Linker";
 
 type TableRecordProps = {
 	accountType: string;
@@ -17,17 +16,7 @@ export const TableRecord = ({
 					{accountType}
 				</td>
 				<td className="px-6 py-4 text-sm font-medium text-gray-200 whitespace-nowrap">
-					{accountValue && <p>Connected</p>}
-					{!accountValue && (
-						<DatabaseLinker platformName={accountType} />
-					)}
-				</td>
-				<td className="px-6 py-4 text-sm font-medium text-gray-200 whitespace-nowrap">
-					<OnchainStatus
-						platformName={accountType}
-						uuid={accountValue || ""}
-						isActive={accountValue ? true : false}
-					/>
+					<Linker platformName={accountType} />
 				</td>
 			</tr>
 		</>
