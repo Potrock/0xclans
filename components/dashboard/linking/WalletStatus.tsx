@@ -1,4 +1,6 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useEffect } from "react";
+import { useAccount } from "wagmi";
 import { LinkWallet } from "./LinkWallet";
 
 export const WalletStatus = (props: {
@@ -6,9 +8,40 @@ export const WalletStatus = (props: {
 	connected: boolean;
 	wallet?: { address: string };
 }) => {
+	const { address, isConnected } = useAccount();
+
+	useEffect(() => {
+		if (address && props.wallet) {
+		}
+	}, [address, isConnected]);
 	return (
 		<div className="flex flex-col items-center h-full bg-gray-800 rounded-md">
-			<ConnectButton />
+			<div className="w-11/12 pt-4">
+				<p className="text-xl font-semibold">
+					Connect Your Crypto Wallet
+				</p>
+				<p className="pt-4 text-sm">
+					Connect your wallet to our website, then link it to our
+					network to access the rest of the platform.
+				</p>
+				<div className="flex pt-4 text-sm font-semibold">
+					<p className="pt-2 align-middle">
+						1. Connect your wallet to the website
+					</p>
+					<div className="mx-auto">
+						<ConnectButton />
+					</div>
+				</div>
+				<div className="flex pt-4 text-sm font-semibold">
+					<p className="pt-2 align-middle">
+						2. Link your wallet to our network
+					</p>
+					<div className="mx-auto">
+						<LinkWallet />
+					</div>
+				</div>
+			</div>
+
 			<div className="pt-4">
 				{props.isDifferentAddress && (
 					<p className="text-red-500 ">
@@ -25,7 +58,8 @@ export const WalletStatus = (props: {
 					</p>
 				)}
 			</div>
-			{!props.wallet && <LinkWallet />}
+			{/* {!props.wallet && <LinkWallet />}
+			{props.wallet && <p>Your wallet is linked</p>} */}
 		</div>
 	);
 };

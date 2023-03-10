@@ -1,10 +1,13 @@
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { useAccount, useSignMessage } from "wagmi";
 
 export const LinkWallet = () => {
 	const { data: session } = useSession();
 	const { address } = useAccount();
+
+	const router = useRouter();
 
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -36,6 +39,7 @@ export const LinkWallet = () => {
 		if (res.status === 200) {
 			// Linking successful
 			console.log("Wallet linked");
+			router.reload();
 		} else {
 			console.log(await res.json());
 		}

@@ -16,6 +16,7 @@ import { Button } from "@/components/elements/Button";
 import Link from "next/link";
 import { WalletStatus } from "@/components/dashboard/linking/WalletStatus";
 import Steps from "@/components/dashboard/steps/Steps";
+import { ConnectGameAccountsStep } from "@/components/dashboard/steps/ConnectGameAccountsStep";
 
 type ProfileProps = {
 	accounts?: {
@@ -150,12 +151,15 @@ export default function Dashboard(props: ProfileProps) {
 					</div>
 					<div className="md:col-start-4 md:col-span-4">
 						{/* @todo CHANGE TO current[1] === "current" */}
-						{statusArr.current[1] === "complete" && (
+						{statusArr.current[1] === "current" && (
 							<WalletStatus
 								wallet={props.wallet}
 								connected={connected}
 								isDifferentAddress={isDifferentAddress}
 							/>
+						)}
+						{statusArr.current[2] === "current" && (
+							<ConnectGameAccountsStep />
 						)}
 					</div>
 				</div>
