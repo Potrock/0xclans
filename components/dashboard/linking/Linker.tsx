@@ -8,29 +8,31 @@ export const Linker = ({ platformName }: { platformName: string }) => {
 	const [isLinked, setIsLinked] = useState(false);
 	const router = useRouter();
 	const { address } = useAccount();
-	const { data: currLinkedId } = useContractRead({
-		address: AccountLinker.address as `0x${string}`,
-		abi: AccountLinker.abi,
-		functionName: "getUuidByPlatformByPlayer",
-		args: [address, platformName.toLowerCase()],
-		enabled: address !== undefined && platformName !== undefined,
-	});
+	// const { data: currLinkedId } = useContractRead({
+	// 	address: AccountLinker.address as `0x${string}`,
+	// 	abi: AccountLinker.abi,
+	// 	functionName: "getUuidByPlatformByPlayer",
+	// 	args: [address, platformName.toLowerCase()],
+	// 	enabled: address !== undefined && platformName !== undefined,
+	// });
 
-	useEffect(() => {
-		if (currLinkedId !== undefined && currLinkedId) {
-			console.log(platformName);
-			setIsLinked(true);
-		}
-	}, [currLinkedId]);
+	const [isLoading, setIsLoading] = useState(false);
+
+	// useEffect(() => {
+	// 	if (currLinkedId !== undefined && currLinkedId) {
+	// 		setIsLinked(true);
+	// 	}
+	// }, [currLinkedId]);
 
 	async function doLinkFlow() {
+		setIsLoading(true);
 		router.push("/api/auth/" + platformName.toLowerCase() + "/login");
 	}
 
 	return (
 		<div>
-			<Button disabled={isLinked} onClick={doLinkFlow}>
-				{isLinked ? <p>Connected! ✅ </p> : <p>Connect on-chain! 🚀</p>}
+			<Button disabled={isLoading} onClick={doLinkFlow}>
+				<p>Connect on-chain! 🚀</p>
 			</Button>
 		</div>
 	);

@@ -1,5 +1,5 @@
 import { CreateClan } from "@/components/clans/CreateClan";
-import { Listing } from "@/components/clans/listing/Listing";
+import { ClanExplorerTable } from "@/components/clans/listing/ClanExplorerTable";
 import { getUserLinkedWallet } from "@/lib/db/utils";
 import { getClans } from "@/lib/graph";
 import { GetClansResultsType } from "@/lib/types";
@@ -20,7 +20,7 @@ export default function Clans({ session, wallet, clans }: ClanProps) {
 		<div className="w-9/12 mx-auto ">
 			<CreateClan />
 			<h1 className="pt-6 text-xl font-bold">Clan Browser</h1>
-			{clans && <Listing clans={clans} />}
+			{clans && <ClanExplorerTable clans={clans} />}
 		</div>
 	);
 }

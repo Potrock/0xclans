@@ -9,16 +9,24 @@ export default async function handler(
 ) {
 	const session = await getSession({ req });
 	if (session && session.user && session.user.id) {
+		//DEBUG
+		console.log(req.query);
+
 		const query = req.query;
 		const { signedMsg } = query;
-		const address = decodeSignature(
-			signedMsg as string,
-			"Sign this message to link your wallet to your 0xClans account: \n" +
-				session.user.id
-		);
+		const address = decodeSignature(signedMsg as string, session.user.id);
+
+		console.log("User ID session: " + session.user.id);
 
 		if (!address) {
 			res.status(400).json({ error: "Invalid signature" });
+			return;
+		}
+
+		console.log(address);
+
+		if (address !== query.wallet) {
+			res.status(400).json({ error: "Address mismatch" });
 			return;
 		}
 

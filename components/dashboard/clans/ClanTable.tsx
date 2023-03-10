@@ -9,7 +9,7 @@ export const ClanTable = ({
 		<div className="flex flex-col">
 			<div className="overflow-x-auto">
 				<div className="inline-block min-w-full py-2">
-					<div className="overflow-hidden">
+					<div className="overflow-hidden rounded-md">
 						<table className="min-w-full rounded">
 							<thead className="bg-gray-800">
 								<tr>

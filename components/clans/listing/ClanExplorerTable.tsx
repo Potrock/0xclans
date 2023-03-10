@@ -5,7 +5,7 @@ type ListingProps = {
 	clans: GetClansResultsType;
 };
 
-export const Listing = ({ clans }: ListingProps) => {
+export const ClanExplorerTable = ({ clans }: ListingProps) => {
 	return (
 		<div className="flex flex-col pt-2">
 			<div className="overflow-x-auto">
@@ -38,9 +38,7 @@ export const Listing = ({ clans }: ListingProps) => {
 									>
 										Contract
 									</th>
-									<th scope="col">
-
-									</th>
+									<th scope="col"></th>
 								</tr>
 							</thead>
 							<tbody>

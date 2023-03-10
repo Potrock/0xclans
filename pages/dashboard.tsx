@@ -1,19 +1,21 @@
 import { CompleteAuthModal } from "@/components/dashboard/linking/CompleteAuthModal";
 import { LinkWallet } from "@/components/dashboard/linking/LinkWallet";
-import { AccountTable } from "@/components/dashboard/table/AccountTable";
+import { AccountTable } from "@/components/dashboard/accounts/AccountTable";
 import { getUserLinkedAccounts, getUserLinkedWallet } from "@/lib/db/utils";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { Session } from "next-auth";
 import { getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 import AccountLinker from "contracts/AccountLinker.json";
 import { getUserProfile } from "@/lib/graph";
 import { ClanTable } from "@/components/dashboard/clans/ClanTable";
 import { Button } from "@/components/elements/Button";
 import Link from "next/link";
+import { WalletStatus } from "@/components/dashboard/linking/WalletStatus";
+import Steps from "@/components/dashboard/steps/Steps";
 
 type ProfileProps = {
 	accounts?: {
@@ -36,11 +38,14 @@ type ProfileProps = {
 	}[];
 	session: Session;
 };
+
 export default function Dashboard(props: ProfileProps) {
 	const { address, isConnected } = useAccount();
 	const [connected, setConnected] = useState(false);
 	const [isDifferentAddress, setIsDifferentAddress] = useState(false);
 	const [showCompleteAuthFlow, setShowCompleteAuthFlow] = useState(false);
+
+	const statusArr = useRef([] as string[]);
 
 	const { data: session } = useSession();
 
@@ -65,10 +70,6 @@ export default function Dashboard(props: ProfileProps) {
 		isError,
 	} = useContractWrite(config);
 
-	/**
-	 * @todo
-	 * Convert this to SSR props
-	 */
 	useEffect(() => {
 		if (
 			props.link &&
@@ -78,6 +79,17 @@ export default function Dashboard(props: ProfileProps) {
 			props.link.plaformId
 		) {
 			setShowCompleteAuthFlow(true);
+		}
+
+		//update index 0 of statusArr to "complete"
+		statusArr.current[0] = "complete";
+
+		if (props.wallet && props.wallet.address) {
+			statusArr.current[1] = "complete";
+			statusArr.current[2] = "current";
+		} else {
+			statusArr.current[1] = "current";
+			statusArr.current[2] = "upcoming";
 		}
 	}, []);
 
@@ -128,32 +140,28 @@ export default function Dashboard(props: ProfileProps) {
 						Welcome back, {session.user.name}
 					</p>
 				)}
-				<div className="pt-8">
-					<ConnectButton />
-					<div className="pt-4">
-						{isDifferentAddress && (
-							<p className="text-red-500 ">
-								Your wallet address is different from the one in
-								our database. Please change accounts in your
-								wallet or contact support.
-							</p>
-						)}
-						{!connected && props.wallet && (
-							<p className="text-red-500 ">
-								We have a wallet registered to your discord
-								account, but it&apos;s not currently connected
-								to the page. Please connect it using the button
-								above.
-							</p>
+
+				<div className="pt-8 md:grid md:grid-cols-7">
+					<div className="md:col-span-2 sm:pb-8 md:pb-0">
+						<p className="pb-4 text-xl font-semibold">
+							Get Started
+						</p>
+						<Steps status={statusArr.current} />
+					</div>
+					<div className="md:col-start-4 md:col-span-4">
+						{/* @todo CHANGE TO current[1] === "current" */}
+						{statusArr.current[1] === "complete" && (
+							<WalletStatus
+								wallet={props.wallet}
+								connected={connected}
+								isDifferentAddress={isDifferentAddress}
+							/>
 						)}
 					</div>
-					{!props.wallet && <LinkWallet />}
 				</div>
 				<div className="pt-6">
-					<div className="">
-						<p className="text-xl font-semibold">Your Accounts</p>
-						<AccountTable accounts={props.accounts} />
-					</div>
+					<p className="text-xl font-semibold">Your Accounts</p>
+					<AccountTable accounts={props.accounts} />
 				</div>
 				<div>
 					<p className="pt-6 text-xl font-semibold">Your Clans</p>

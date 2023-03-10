@@ -12,8 +12,8 @@ export const AccountTable = ({ accounts }: AccountTableProps) => {
 		<div className="flex flex-col">
 			<div className="overflow-x-auto">
 				<div className="inline-block min-w-full py-2">
-					<div className="overflow-hidden">
-						<table className="min-w-full rounded">
+					<div className="overflow-hidden rounded-md">
+						<table className="min-w-full">
 							<thead className="bg-gray-800">
 								<tr>
 									<th

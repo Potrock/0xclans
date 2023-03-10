@@ -16,7 +16,8 @@ export const TableRecord = ({
 					{accountType}
 				</td>
 				<td className="px-6 py-4 text-sm font-medium text-gray-200 whitespace-nowrap">
-					<Linker platformName={accountType} />
+					{!accountValue && <Linker platformName={accountType} />}
+					{accountValue && <p>Linked ✅</p>}
 				</td>
 			</tr>
 		</>
