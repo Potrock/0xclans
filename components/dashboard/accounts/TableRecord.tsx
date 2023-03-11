@@ -3,11 +3,13 @@ import { Linker } from "@/components/dashboard/linking/Linker";
 type TableRecordProps = {
 	accountType: string;
 	accountValue?: string;
+	onStep: boolean;
 };
 
 export const TableRecord = ({
 	accountType,
 	accountValue,
+	onStep,
 }: TableRecordProps) => {
 	return (
 		<>
@@ -16,8 +18,11 @@ export const TableRecord = ({
 					{accountType}
 				</td>
 				<td className="px-6 py-4 text-sm font-medium text-gray-200 whitespace-nowrap">
-					{!accountValue && <Linker platformName={accountType} />}
-					{accountValue && <p>Linked ✅</p>}
+					{!onStep && <p className="font-normal">❌ Link Wallet</p>}
+					{!accountValue && onStep && (
+						<Linker platformName={accountType} />
+					)}
+					{accountValue && onStep && <p>Linked ✅</p>}
 				</td>
 			</tr>
 		</>

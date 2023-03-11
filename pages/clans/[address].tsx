@@ -17,6 +17,13 @@ export default function Clan({ name, symbol, members, id }: GetClanResultType) {
 			>
 				Contract: {truncateAddress(id)}
 			</Link>
+			{members.map((member) => {
+				return (
+					<div key={member.id}>
+						<p>Member: {member.id}</p>
+					</div>
+				);
+			})}
 		</div>
 	);
 }

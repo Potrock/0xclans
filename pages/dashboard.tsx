@@ -43,6 +43,7 @@ type ProfileProps = {
 export default function Dashboard(props: ProfileProps) {
 	const { address, isConnected } = useAccount();
 	const [connected, setConnected] = useState(false);
+	const [gameLink, setGameLink] = useState(false);
 	const [isDifferentAddress, setIsDifferentAddress] = useState(false);
 	const [showCompleteAuthFlow, setShowCompleteAuthFlow] = useState(false);
 
@@ -101,6 +102,12 @@ export default function Dashboard(props: ProfileProps) {
 	}, [isLoading]);
 
 	useEffect(() => {
+		if (statusArr.current[2] === "current") {
+			setGameLink(true);
+		}
+	}, [statusArr.current]);
+
+	useEffect(() => {
 		if (isConnected) {
 			if (address && props.wallet) {
 				if (address !== props.wallet.address) {
@@ -150,7 +157,6 @@ export default function Dashboard(props: ProfileProps) {
 						<Steps status={statusArr.current} />
 					</div>
 					<div className="md:col-start-4 md:col-span-4">
-						{/* @todo CHANGE TO current[1] === "current" */}
 						{statusArr.current[1] === "current" && (
 							<WalletStatus
 								wallet={props.wallet}
@@ -165,7 +171,7 @@ export default function Dashboard(props: ProfileProps) {
 				</div>
 				<div className="pt-6">
 					<p className="text-xl font-semibold">Your Accounts</p>
-					<AccountTable accounts={props.accounts} />
+					<AccountTable accounts={props.accounts} onStep={gameLink} />
 				</div>
 				<div>
 					<p className="pt-6 text-xl font-semibold">Your Clans</p>

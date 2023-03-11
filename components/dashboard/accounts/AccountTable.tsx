@@ -5,9 +5,10 @@ type AccountTableProps = {
 		minecraft?: string;
 		steam?: string;
 	};
+	onStep: boolean;
 };
 
-export const AccountTable = ({ accounts }: AccountTableProps) => {
+export const AccountTable = ({ accounts, onStep }: AccountTableProps) => {
 	return (
 		<div className="flex flex-col">
 			<div className="overflow-x-auto">
@@ -34,10 +35,12 @@ export const AccountTable = ({ accounts }: AccountTableProps) => {
 								<TableRecord
 									accountType="Minecraft"
 									accountValue={accounts?.minecraft}
+									onStep={onStep}
 								/>
 								<TableRecord
 									accountType="Steam"
 									accountValue={accounts?.steam}
+									onStep={onStep}
 								/>
 							</tbody>
 						</table>
