@@ -25,13 +25,14 @@ export const Linker = ({ platformName }: { platformName: string }) => {
 	// }, [currLinkedId]);
 
 	async function doLinkFlow() {
+		if (isLoading) return;
 		setIsLoading(true);
 		router.push("/api/auth/" + platformName.toLowerCase() + "/login");
 	}
 
 	return (
 		<div>
-			<Button disabled={isLoading} onClick={doLinkFlow}>
+			<Button loading={isLoading} onClick={doLinkFlow}>
 				<p>Connect on-chain! 🚀</p>
 			</Button>
 		</div>

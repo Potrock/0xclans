@@ -15,12 +15,23 @@ export default function Clan({ name, symbol, members, id }: GetClanResultType) {
 				target="_blank"
 				rel="noreferrer"
 			>
-				Contract: {truncateAddress(id)}
+				Contract:{" "}
+				<span className="text-blue-500">{truncateAddress(id)}</span>
 			</Link>
+			<div className="pt-2 pb-2 text-xl font-semibold">
+				<p>Members</p>
+			</div>
 			{members.map((member) => {
 				return (
 					<div key={member.id}>
-						<p>Member: {member.id}</p>
+						<Link
+							href={
+								"https://mumbai.polygonscan.com/address/" +
+								member.id
+							}
+						>
+							<p className="text-blue-500">{member.id}</p>
+						</Link>
 					</div>
 				);
 			})}

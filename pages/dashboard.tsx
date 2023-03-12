@@ -1,8 +1,6 @@
 import { CompleteAuthModal } from "@/components/dashboard/linking/CompleteAuthModal";
-import { LinkWallet } from "@/components/dashboard/linking/LinkWallet";
 import { AccountTable } from "@/components/dashboard/accounts/AccountTable";
 import { getUserLinkedAccounts, getUserLinkedWallet } from "@/lib/db/utils";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { Session } from "next-auth";
 import { getSession, useSession } from "next-auth/react";
@@ -43,11 +41,10 @@ type ProfileProps = {
 export default function Dashboard(props: ProfileProps) {
 	const { address, isConnected } = useAccount();
 	const [connected, setConnected] = useState(false);
-	const [gameLink, setGameLink] = useState(false);
 	const [isDifferentAddress, setIsDifferentAddress] = useState(false);
 	const [showCompleteAuthFlow, setShowCompleteAuthFlow] = useState(false);
 
-	const statusArr = useRef([] as string[]);
+	const [statusArr, setStatusArr] = useState([] as string[]);
 
 	const { data: session } = useSession();
 
@@ -83,16 +80,19 @@ export default function Dashboard(props: ProfileProps) {
 			setShowCompleteAuthFlow(true);
 		}
 
-		//update index 0 of statusArr to "complete"
-		statusArr.current[0] = "complete";
+		// do the above but with state
+		let temp = statusArr;
+		temp[0] = "complete";
 
 		if (props.wallet && props.wallet.address) {
-			statusArr.current[1] = "complete";
-			statusArr.current[2] = "current";
+			temp[1] = "complete";
+			temp[2] = "current";
 		} else {
-			statusArr.current[1] = "current";
-			statusArr.current[2] = "upcoming";
+			temp[1] = "current";
+			temp[2] = "upcoming";
 		}
+
+		setStatusArr(temp);
 	}, []);
 
 	useEffect(() => {
@@ -100,12 +100,6 @@ export default function Dashboard(props: ProfileProps) {
 			router.replace("/dashboard");
 		}
 	}, [isLoading]);
-
-	useEffect(() => {
-		if (statusArr.current[2] === "current") {
-			setGameLink(true);
-		}
-	}, [statusArr.current]);
 
 	useEffect(() => {
 		if (isConnected) {
@@ -154,24 +148,27 @@ export default function Dashboard(props: ProfileProps) {
 						<p className="pb-4 text-xl font-semibold">
 							Get Started
 						</p>
-						<Steps status={statusArr.current} />
+						<Steps status={statusArr} />
 					</div>
 					<div className="md:col-start-4 md:col-span-4">
-						{statusArr.current[1] === "current" && (
+						{statusArr[1] === "current" && (
 							<WalletStatus
 								wallet={props.wallet}
 								connected={connected}
 								isDifferentAddress={isDifferentAddress}
 							/>
 						)}
-						{statusArr.current[2] === "current" && (
+						{statusArr[2] === "current" && (
 							<ConnectGameAccountsStep />
 						)}
 					</div>
 				</div>
 				<div className="pt-6">
 					<p className="text-xl font-semibold">Your Accounts</p>
-					<AccountTable accounts={props.accounts} onStep={gameLink} />
+					<AccountTable
+						accounts={props.accounts}
+						onStep={statusArr[2] === "current"}
+					/>
 				</div>
 				<div>
 					<p className="pt-6 text-xl font-semibold">Your Clans</p>
