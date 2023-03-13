@@ -11,6 +11,7 @@ export const TableRecord = ({
 	accountValue,
 	onStep,
 }: TableRecordProps) => {
+	console.log(accountType, accountValue, onStep);
 	return (
 		<>
 			<tr className="bg-gray-700">
@@ -22,7 +23,7 @@ export const TableRecord = ({
 					{!accountValue && onStep && (
 						<Linker platformName={accountType} />
 					)}
-					{accountValue && onStep && <p>Linked ✅</p>}
+					{accountValue && onStep && <p>✅</p>}
 				</td>
 			</tr>
 		</>

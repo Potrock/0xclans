@@ -200,22 +200,36 @@ export const getServerSideProps: GetServerSideProps = async ({
 	const session = await getSession({ req });
 	if (session) {
 		let props = {};
-		const userAccounts = await getUserLinkedAccounts(session.user.id);
 
 		const wallet = await getUserLinkedWallet(session.user.id);
 
 		if (wallet) {
-			const clans = await getUserProfile(wallet.address);
-			if (clans) {
-				props = { ...props, clans: clans.user.clans };
+			const graphProfile = await getUserProfile(wallet.address);
+
+			console.log(graphProfile?.user.accounts);
+			if (graphProfile) {
+				let accounts = {};
+				for (const account of graphProfile.user.accounts) {
+					if (account.platform === "minecraft") {
+						accounts = { ...accounts, minecraft: account.uuid };
+					} else if (account.platform === "steam") {
+						accounts = { ...accounts, steam: account.uuid };
+					}
+				}
+
+				props = {
+					...props,
+					clans: graphProfile.user.clans,
+					accounts: accounts,
+				};
 			}
 		}
 
 		props = { ...props, session: session };
 
-		if (userAccounts && (userAccounts.steam || userAccounts.minecraft)) {
-			props = { ...props, accounts: userAccounts };
-		}
+		// if (userAccounts && (userAccounts.steam || userAccounts.minecraft)) {
+		// 	props = { ...props, accounts: userAccounts };
+		// }
 
 		if (wallet) {
 			props = { ...props, wallet: wallet };
