@@ -11,7 +11,7 @@ export const CreateClan = () => {
 	const [symbol, setSymbol] = useState<string>("");
 	const [showModal, setShowModal] = useState<boolean>(false);
 
-	const { config } = usePrepareContractWrite({
+	const { config, error } = usePrepareContractWrite({
 		address: ClanFactoryClones.address as `0x${string}`,
 		abi: ClanFactoryClones.abi,
 		functionName: "createClan",
@@ -70,14 +70,23 @@ export const CreateClan = () => {
 						onChange={(e) => setSymbol(e.target.value)}
 					/>
 				</div>
-				<Button onClick={doWrite}>
-					{isLoading && (
+				{!error && (
+					<Button onClick={doWrite}>
+						{isLoading && (
+							<div className="text-center">
+								<Spinner />
+							</div>
+						)}
+						{!isLoading && "Create Clan"}
+					</Button>
+				)}
+				{error && (
+					<Button disabled={true}>
 						<div className="text-center">
-							<Spinner />
+							You already have a clan!
 						</div>
-					)}
-					{!isLoading && "Create Clan"}
-				</Button>
+					</Button>
+				)}
 			</form>
 		</div>
 	);
