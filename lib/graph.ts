@@ -127,3 +127,23 @@ export const getUserProfile = async (
 		return null;
 	}
 };
+
+export const isClanAddress = async (
+	address: string
+): Promise<boolean | null> => {
+	const { data } = await client.query({
+		query: gql`
+			{
+				clan(id: "${address.toLowerCase()}") {
+					id
+				}
+			}
+		`,
+	});
+
+	try {
+		return !!data.clan.id;
+	} catch (e) {
+		return null;
+	}
+};

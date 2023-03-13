@@ -1,33 +1,25 @@
-// set up the default NextJS api route handler
+import { getClan, isClanAddress } from "@/lib/graph";
+import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
-	const session = await getSession({ req });
-	if (session && session.user && session.user.id) {
-		//DEBUG
+	const query = req.query;
+	const clanAddress = query.clanAddress;
 
-		const query = req.query;
-		const { signedMsg } = query;
-		const address = decodeSignature(signedMsg as string, session.user.id);
+	if (!clanAddress) {
+		res.status(400).json({ error: "No clan address provided" });
+		return;
+	}
 
-		if (!address) {
-			res.status(400).json({ error: "Invalid signature" });
-			return;
-		}
+	const clan = await isClanAddress(clanAddress as string);
 
-		if (address !== query.wallet) {
-			res.status(400).json({ error: "Address mismatch" });
-			return;
-		}
-
-		const wallet = await connectWalletToUser(address, session.user.id);
-		if (wallet) {
-			//Success
-			res.status(200).json({ success: true });
-		}
+	if (clan) {
+		res.status(200).json({ exists: true });
+		return;
 	} else {
-		res.status(401).json({ error: "Unauthorized" });
+		res.status(400).json({ exists: false });
+		return;
 	}
 }

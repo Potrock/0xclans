@@ -24,6 +24,7 @@ function classNames(...classes: any[]) {
 
 export const Navbar = () => {
 	const provider = useProvider();
+	const [fetched, setFetched] = useState(false);
 
 	const router = useRouter();
 
@@ -36,16 +37,16 @@ export const Navbar = () => {
 
 	const handleSearch = async (e: any) => {
 		e.preventDefault();
-		// Check if the target is a contract or a wallet address
-		// If it's a contract, redirect to the clan page
-		// If it's a wallet address, redirect to the profile page
-		// const code = await provider.getCode(search);
-		// if (code === "0x") {
-		// 	// It's a wallet address
-		router.push(`/profiles/${search}`);
-		// } else {
-		// 	// It's a contract
-		// 	router.push(`/clans/${search}`);
+		if (fetched) return;
+		setFetched(true);
+
+		const res = await fetch(`/api/getclan?clanAddress=${search}`);
+		setFetched(false);
+		if (res.status == 200) {
+			router.push(`/clans/${search}`);
+		} else {
+			router.push(`/profiles/${search}`);
+		}
 	};
 	return (
 		<Disclosure as="nav" className="bg-gray-800">
