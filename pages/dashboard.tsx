@@ -15,6 +15,7 @@ import Link from "next/link";
 import { WalletStatus } from "@/components/dashboard/linking/WalletStatus";
 import Steps from "@/components/dashboard/steps/Steps";
 import { ConnectGameAccountsStep } from "@/components/dashboard/steps/ConnectGameAccountsStep";
+import Head from "next/head";
 
 type ProfileProps = {
 	accounts?: {
@@ -123,6 +124,9 @@ export default function Dashboard(props: ProfileProps) {
 
 	return (
 		<>
+			<Head>
+				<title>0xClans | Dashboard</title>
+			</Head>
 			{props.link && (
 				<CompleteAuthModal
 					link={{
