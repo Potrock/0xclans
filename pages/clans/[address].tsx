@@ -58,23 +58,16 @@ export const getServerSideProps: GetServerSideProps = async ({
 
 		let clan = await getClan(clanAddress);
 
-		if (!clan) {
+		if (clan) {
 			return {
-				redirect: {
-					destination: "/clans",
-					permanent: false,
+				props: {
+					name: clan.name,
+					symbol: clan.symbol,
+					members: clan.members,
+					id: clan.id,
 				},
 			};
 		}
-
-		return {
-			props: {
-				name: clan.name,
-				symbol: clan.symbol,
-				members: clan.members,
-				id: clan.id,
-			},
-		};
 	}
 	return {
 		redirect: {

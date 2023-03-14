@@ -206,7 +206,6 @@ export const getServerSideProps: GetServerSideProps = async ({
 		if (wallet) {
 			const graphProfile = await getUserProfile(wallet.address);
 
-			console.log(graphProfile?.user.accounts);
 			if (graphProfile) {
 				let accounts = {};
 				for (const account of graphProfile.user.accounts) {
@@ -226,10 +225,6 @@ export const getServerSideProps: GetServerSideProps = async ({
 		}
 
 		props = { ...props, session: session };
-
-		// if (userAccounts && (userAccounts.steam || userAccounts.minecraft)) {
-		// 	props = { ...props, accounts: userAccounts };
-		// }
 
 		if (wallet) {
 			props = { ...props, wallet: wallet };
