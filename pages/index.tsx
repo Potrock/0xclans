@@ -1,10 +1,5 @@
-import { getSession, signIn, useSession, signOut } from "next-auth/react";
-import { GetServerSideProps, GetServerSidePropsContext } from "next";
-import { getUserLinkedAccounts } from "@/lib/db/utils";
-import { Session } from "next-auth";
 import {
 	ArrowRightIcon,
-	ComputerDesktopIcon,
 	LinkIcon,
 	PaintBrushIcon,
 	ShieldCheckIcon,
@@ -14,17 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Head from "next/head";
 
-type Props = {
-	accounts?: {
-		minecraft?: string;
-		steam?: string;
-	};
-	session: Session;
-};
-
-export default function Home(props: Props) {
-	const { data: session } = useSession();
-
+export default function Home() {
 	return (
 		<>
 			<Head>
@@ -118,29 +103,3 @@ export default function Home(props: Props) {
 		</>
 	);
 }
-
-export const getServerSideProps: GetServerSideProps = async ({
-	req,
-	res,
-}: GetServerSidePropsContext) => {
-	const session = await getSession({ req });
-	if (session) {
-		const userAccounts = await getUserLinkedAccounts(session.user.id);
-
-		if (userAccounts) {
-			return {
-				props: {
-					session: session,
-					accounts: userAccounts,
-				},
-			};
-		} else {
-			return {
-				props: { session: session },
-			};
-		}
-	}
-	return {
-		props: { session: null },
-	};
-};
